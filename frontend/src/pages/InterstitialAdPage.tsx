@@ -53,7 +53,7 @@ const InterstitialAdPage: React.FC = () => {
   const destination = searchParams.get("to") || "/dashboard";
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
   const [canSkip, setCanSkip] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   const content =
     CONTENT_VARIANTS[destination] || CONTENT_VARIANTS["/dashboard"];
