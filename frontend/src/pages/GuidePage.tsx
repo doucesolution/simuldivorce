@@ -1,11 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ChevronLeft,
-  Shield,
-  Home,
-  CheckCircle2,
-} from "lucide-react";
+import { ChevronLeft, Shield, Home, CheckCircle2 } from "lucide-react";
 import { SEO, howToJsonLd, breadcrumbJsonLd } from "../components/SEO";
 import { AdUnit } from "../components/AdUnit";
 
