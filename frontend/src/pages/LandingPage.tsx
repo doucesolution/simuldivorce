@@ -160,19 +160,6 @@ const LandingPage: React.FC = () => {
           </Link>
         </nav>
       </div>
-
-      {/* Bottom Leaderboard Ad */}
-      <div
-        className="w-full bg-[var(--bg-tertiary)]/50 border-t border-[var(--border-color)] flex items-center justify-center z-20"
-        style={{
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
-          minHeight: "4rem",
-        }}
-      >
-        <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest">
-          Google Ads Leaderboard
-        </span>
-      </div>
     </div>
   );
 };

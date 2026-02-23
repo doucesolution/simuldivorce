@@ -9,6 +9,7 @@ import {
   Calculator,
 } from "lucide-react";
 import { SEO, breadcrumbJsonLd, faqJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 
 const GlossaryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -181,6 +182,11 @@ const GlossaryPage: React.FC = () => {
             def="Échelle OCDE utilisée par la méthode INSEE : 1er adulte = 1, 2e adulte = 0,5, enfant < 14 ans = 0,3, enfant ≥ 14 ans = 0,5. Permet de comparer les niveaux de vie des ménages."
           />
         </Section>
+
+        {/* Ad — content-rich page */}
+        <div className="flex justify-center my-8">
+          <AdUnit type="rectangle" />
+        </div>
 
         {/* 5. Prestation Compensatoire */}
         <Section title="5. Prestation Compensatoire" icon={Scale}>

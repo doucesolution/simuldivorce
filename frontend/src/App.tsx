@@ -14,6 +14,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import MethodologyPage from "./pages/MethodologyPage";
 import GlossaryPage from "./pages/GlossaryPage";
+import InterstitialAdPage from "./pages/InterstitialAdPage";
 import ThemeToggle from "./components/ThemeToggle";
 import Footer from "./components/Footer";
 import OfflineIndicator from "./components/OfflineIndicator";
@@ -134,6 +135,14 @@ const App: React.FC = () => {
           element={
             <CenteredLayout>
               <DashboardPage />
+            </CenteredLayout>
+          }
+        />
+        <Route
+          path="/transition"
+          element={
+            <CenteredLayout>
+              <InterstitialAdPage />
             </CenteredLayout>
           }
         />

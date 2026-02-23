@@ -14,6 +14,7 @@ import { InfoTooltip } from "../components/InfoTooltip";
 import { GuidedStep, useGuidedSteps } from "../components/GuidedTooltip";
 import { GuidedHeaderTour } from "../components/GuidedHeaderTour";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 import {
   loadFormData,
   saveFormData,
@@ -167,6 +168,12 @@ const PrestationCompensatoirePage: React.FC = () => {
         <p className="text-sm text-gray-400">
           Renseignez les informations nécessaires au calcul de la prestation
           compensatoire.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-gray-500">
+          La durée du mariage et la situation familiale sont des critères clés
+          du calcul (art. 271 du Code Civil). Les unités de consommation OCDE
+          utilisées par la méthode INSEE attribuent 0,3 UC par enfant de moins
+          de 14 ans et 0,5 UC au-delà.
         </p>
       </div>
 
@@ -421,6 +428,13 @@ const PrestationCompensatoirePage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Bloc éditorial — contenu d'éditeur pour conformité AdSense */}
+      <div className="px-6 pb-6 space-y-4">
+        <div className="flex justify-center">
+          <AdUnit type="native" className="w-full max-w-md" />
+        </div>
+      </div>
 
       {/* Footer */}
       <div

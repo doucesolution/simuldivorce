@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
   Shield,
-  CreditCard,
   Home,
-  Users,
-  Calculator,
-  ClipboardList,
+  CheckCircle2,
 } from "lucide-react";
 import { SEO, howToJsonLd, breadcrumbJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 
 const GuidePage: React.FC = () => {
   const navigate = useNavigate();
@@ -102,142 +100,38 @@ const GuidePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 2. Informations par catégorie */}
+        {/* 2. Checklist simple */}
         <section className="delay-100 animate-fade-in">
           <h3 className="mb-6 text-sm font-bold tracking-widest text-gray-500 uppercase">
-            Informations requises par catégorie
+            Informations à préparer
           </h3>
 
-          <div className="grid gap-4">
-            {/* Toutes méthodes */}
-            <div className="p-5 border glass-panel rounded-2xl border-white/10">
-              <div className="flex items-center mb-4 space-x-3">
-                <div className="p-2 rounded-lg bg-blue-500/20">
-                  <ClipboardList className="w-5 h-5 text-blue-400" />
-                </div>
-                <h4 className="text-lg font-bold">
-                  Base commune{" "}
-                  <span className="text-xs font-normal text-gray-500">
-                    (toutes les méthodes)
-                  </span>
-                </h4>
+          <div className="p-5 border glass-panel rounded-2xl border-white/10 space-y-3">
+            {[
+              "Date de mariage",
+              "Date prévisionnelle du divorce",
+              "Date de naissance du créancier",
+              "Date de naissance du débiteur",
+              "Revenus nets mensuels (créancier & débiteur)",
+              "Revenus bruts mensuels ou annuels (créancier & débiteur)",
+              "Nombre d'enfants et âge de chacun",
+              "Type de garde (classique, alternée ou réduite)",
+              "Contributions enfants mensuelles",
+              "Patrimoine non productif et rendement estimé (%)",
+              "Écart retraite du créancier (années sans cotisation)",
+            ].map((item) => (
+              <div key={item} className="flex items-start gap-3">
+                <CheckCircle2 className="w-4 h-4 text-[var(--color-plasma-cyan)] shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-300">{item}</span>
               </div>
-              <ul className="pl-2 space-y-3 text-sm text-gray-300 border-l-2 border-white/5">
-                <li>
-                  <strong className="text-white">Date de mariage</strong>
-                </li>
-                <li>
-                  <strong className="text-white">
-                    Date prévisionnelle du divorce
-                  </strong>
-                </li>
-                <li>
-                  <strong className="text-white">Dates de naissance</strong>{" "}
-                  (créancier et débiteur)
-                </li>
-              </ul>
-            </div>
-
-            {/* Revenus nets */}
-            <div className="p-5 border glass-panel rounded-2xl border-white/10">
-              <div className="flex items-center mb-4 space-x-3">
-                <div className="p-2 rounded-lg bg-indigo-500/20">
-                  <CreditCard className="w-5 h-5 text-indigo-400" />
-                </div>
-                <h4 className="text-lg font-bold">
-                  Revenus nets mensuels{" "}
-                  <span className="text-xs font-normal text-gray-500">
-                    (Tiers Pondéré, INSEE)
-                  </span>
-                </h4>
-              </div>
-              <ul className="pl-2 space-y-3 text-sm text-gray-300 border-l-2 border-white/5">
-                <li>
-                  <strong className="text-white">
-                    Revenu net mensuel du créancier
-                  </strong>{" "}
-                  (Net Social)
-                </li>
-                <li>
-                  <strong className="text-white">
-                    Revenu net mensuel du débiteur
-                  </strong>
-                </li>
-              </ul>
-            </div>
-
-            {/* Revenus bruts & projections — Calcul PC */}
-            <div className="p-5 border glass-panel rounded-2xl border-white/10">
-              <div className="flex items-center mb-4 space-x-3">
-                <div className="p-2 rounded-lg bg-teal-500/20">
-                  <Calculator className="w-5 h-5 text-teal-400" />
-                </div>
-                <h4 className="text-lg font-bold">
-                  Projections financières{" "}
-                  <span className="text-xs font-normal text-gray-500">
-                    (Méthode Calcul PC)
-                  </span>
-                </h4>
-              </div>
-              <ul className="pl-2 space-y-3 text-sm text-gray-300 border-l-2 border-white/5">
-                <li>
-                  <strong className="text-white">Revenus bruts</strong>{" "}
-                  (mensuels ou annuels) — créancier et débiteur
-                </li>
-                <li>
-                  <strong className="text-white">
-                    Contributions enfants mensuelles
-                  </strong>
-                </li>
-                <li>
-                  Éventuelle{" "}
-                  <strong className="text-white">évolution de revenus</strong>{" "}
-                  (montant futur, date de changement)
-                </li>
-                <li>
-                  <strong className="text-white">
-                    Patrimoine non productif
-                  </strong>{" "}
-                  et rendement estimé (%)
-                </li>
-                <li>
-                  <strong className="text-white">
-                    Écart retraite du créancier
-                  </strong>{" "}
-                  (années sans cotisation + revenu pré-interruption)
-                </li>
-              </ul>
-            </div>
-
-            {/* Famille — INSEE / PA Based */}
-            <div className="p-5 border glass-panel rounded-2xl border-white/10">
-              <div className="flex items-center mb-4 space-x-3">
-                <div className="p-2 rounded-lg bg-orange-500/20">
-                  <Users className="w-5 h-5 text-orange-400" />
-                </div>
-                <h4 className="text-lg font-bold">
-                  Situation familiale{" "}
-                  <span className="text-xs font-normal text-gray-500">
-                    (INSEE)
-                  </span>
-                </h4>
-              </div>
-              <ul className="pl-2 space-y-3 text-sm text-gray-300 border-l-2 border-white/5">
-                <li>
-                  <strong className="text-white">Nombre d'enfants</strong>
-                </li>
-                <li>
-                  <strong className="text-white">Âge de chaque enfant</strong>{" "}
-                  (détermine les unités de consommation OCDE)
-                </li>
-                <li>
-                  <strong className="text-white">Type de garde</strong>{" "}
-                  (classique, alternée ou réduite)
-                </li>
-              </ul>
-            </div>
+            ))}
           </div>
         </section>
+
+        {/* Ad — content-rich page */}
+        <div className="flex justify-center my-8">
+          <AdUnit type="rectangle" />
+        </div>
 
         {/* 4. Note */}
         <section className="px-4 pb-8 text-center delay-500 animate-fade-in">

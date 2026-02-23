@@ -15,6 +15,7 @@ import { CurrencyInput } from "../components/CurrencyInput";
 import { GuidedStep, useGuidedSteps } from "../components/GuidedTooltip";
 import { GuidedHeaderTour } from "../components/GuidedHeaderTour";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 import {
   loadFormData,
   saveFormData,
@@ -173,6 +174,13 @@ const CreancierPage: React.FC = () => {
         <p className="text-sm text-gray-400">
           Renseignez les informations du créancier : identité, revenus,
           projections et retraite.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-gray-500">
+          Le créancier est l'époux qui perçoit la prestation compensatoire —
+          celui qui subit la plus forte baisse de niveau de vie après le
+          divorce. Si vous avez connu une cessation d'activité pendant le
+          mariage, la méthode Calcul PC intègre un module de réparation retraite
+          compensant le déficit de cotisations.
         </p>
       </div>
 
@@ -414,12 +422,17 @@ const CreancierPage: React.FC = () => {
                     type="button"
                     onClick={() => {
                       setShowYieldInput((v) => !v);
-                      if (!showYieldInput && creditorPropertyYield === "") setCreditorPropertyYield("3");
+                      if (!showYieldInput && creditorPropertyYield === "")
+                        setCreditorPropertyYield("3");
                     }}
                     className="mt-3 text-[10px] uppercase tracking-widest text-[var(--color-plasma-cyan)] hover:underline flex items-center space-x-1"
                   >
                     <Percent className="w-3 h-3" />
-                    <span>{showYieldInput ? "Masquer le taux de rendement" : "Modifier le taux de rendement ?"}</span>
+                    <span>
+                      {showYieldInput
+                        ? "Masquer le taux de rendement"
+                        : "Modifier le taux de rendement ?"}
+                    </span>
                   </button>
 
                   {showYieldInput && (
@@ -435,7 +448,9 @@ const CreancierPage: React.FC = () => {
                         max="100"
                         step="0.1"
                         value={creditorPropertyYield}
-                        onChange={(e) => setCreditorPropertyYield(e.target.value)}
+                        onChange={(e) =>
+                          setCreditorPropertyYield(e.target.value)
+                        }
                         placeholder="3"
                         className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none"
                       />
@@ -484,6 +499,13 @@ const CreancierPage: React.FC = () => {
             )}
           </div>
         </GuidedStep>
+      </div>
+
+      {/* Bloc éditorial — contenu d'éditeur pour conformité AdSense */}
+      <div className="px-6 pb-6 space-y-4">
+        <div className="flex justify-center">
+          <AdUnit type="native" className="w-full max-w-md" />
+        </div>
       </div>
 
       {/* Footer */}

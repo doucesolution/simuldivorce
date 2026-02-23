@@ -15,6 +15,7 @@ import { CurrencyInput } from "../components/CurrencyInput";
 import { GuidedStep, useGuidedSteps } from "../components/GuidedTooltip";
 import { GuidedHeaderTour } from "../components/GuidedHeaderTour";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 import {
   loadFormData,
   saveFormData,
@@ -163,6 +164,12 @@ const DebiteurPage: React.FC = () => {
         <p className="text-sm text-gray-400">
           Renseignez les informations du débiteur : identité, revenus et
           projections.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-gray-500">
+          Le débiteur est l'époux aux revenus les plus élevés (art. 270 du Code
+          Civil). Le Net Social — obligatoire sur les bulletins de paie depuis
+          2024 — sert de base aux méthodes Tiers Pondéré et INSEE. La méthode
+          Calcul PC utilise les revenus bruts projetés sur 8 ans.
         </p>
       </div>
 
@@ -437,6 +444,13 @@ const DebiteurPage: React.FC = () => {
             )}
           </div>
         </GuidedStep>
+      </div>
+
+      {/* Bloc éditorial — contenu d'éditeur pour conformité AdSense */}
+      <div className="px-6 pb-6 space-y-4">
+        <div className="flex justify-center">
+          <AdUnit type="native" className="w-full max-w-md" />
+        </div>
       </div>
 
       {/* Footer */}

@@ -13,10 +13,14 @@ import { SEO, breadcrumbJsonLd } from "../components/SEO";
 
 const DisclaimerPage: React.FC = () => {
   const navigate = useNavigate();
-  const [accepted, setAccepted] = useState(false);
+  const [checks, setChecks] = useState([false, false, false, false, false]);
+  const allAccepted = checks.every(Boolean);
+
+  const toggle = (i: number) =>
+    setChecks((prev) => prev.map((v, idx) => (idx === i ? !v : v)));
 
   const handleContinue = () => {
-    if (!accepted) return;
+    if (!allAccepted) return;
     localStorage.setItem("disclaimerAccepted", "true");
 
     // Auto-select all PC methods (skip CalculationChoicePage)
@@ -76,7 +80,7 @@ const DisclaimerPage: React.FC = () => {
               <div className="shrink-0 mt-0.5">
                 <Scale className="w-5 h-5 text-amber-400" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-sm font-bold text-white mb-1">
                   Aucune valeur juridique
                 </h3>
@@ -89,6 +93,17 @@ const DisclaimerPage: React.FC = () => {
                   cas un acte juridique, un conseil juridique, ni un avis
                   d'avocat ou de notaire.
                 </p>
+                <label className="flex items-center space-x-3 mt-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={checks[0]}
+                    onChange={() => toggle(0)}
+                    className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 accent-[var(--color-plasma-cyan)] cursor-pointer rounded"
+                  />
+                  <span className="text-xs sm:text-sm text-gray-400">
+                    J'ai compris que les résultats n'ont aucune valeur juridique
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -99,7 +114,7 @@ const DisclaimerPage: React.FC = () => {
               <div className="shrink-0 mt-0.5">
                 <Ban className="w-5 h-5 text-amber-400" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-sm font-bold text-white mb-1">
                   Non recevable devant un juge
                 </h3>
@@ -110,6 +125,18 @@ const DisclaimerPage: React.FC = () => {
                   judiciaire, ou toute autre juridiction. Elles ne peuvent en
                   aucun cas se substituer à une décision de justice.
                 </p>
+                <label className="flex items-center space-x-3 mt-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={checks[1]}
+                    onChange={() => toggle(1)}
+                    className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 accent-[var(--color-plasma-cyan)] cursor-pointer rounded"
+                  />
+                  <span className="text-xs sm:text-sm text-gray-400">
+                    J'ai compris que les résultats ne sont pas recevables en
+                    justice
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -120,7 +147,7 @@ const DisclaimerPage: React.FC = () => {
               <div className="shrink-0 mt-0.5">
                 <FileWarning className="w-5 h-5 text-amber-400" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-sm font-bold text-white mb-1">
                   Ne remplace pas un professionnel du droit
                 </h3>
@@ -132,6 +159,17 @@ const DisclaimerPage: React.FC = () => {
                   réelle de divorce, il est impératif de faire appel à un
                   conseil juridique qualifié.
                 </p>
+                <label className="flex items-center space-x-3 mt-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={checks[2]}
+                    onChange={() => toggle(2)}
+                    className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 accent-[var(--color-plasma-cyan)] cursor-pointer rounded"
+                  />
+                  <span className="text-xs sm:text-sm text-gray-400">
+                    J'ai compris que cet outil ne remplace pas un avocat
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -142,7 +180,7 @@ const DisclaimerPage: React.FC = () => {
               <div className="shrink-0 mt-0.5">
                 <AlertTriangle className="w-5 h-5 text-amber-400" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-sm font-bold text-white mb-1">
                   Limites de la simulation
                 </h3>
@@ -154,6 +192,17 @@ const DisclaimerPage: React.FC = () => {
                   de santé, etc. Les montants réels peuvent différer
                   significativement.
                 </p>
+                <label className="flex items-center space-x-3 mt-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={checks[3]}
+                    onChange={() => toggle(3)}
+                    className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 accent-[var(--color-plasma-cyan)] cursor-pointer rounded"
+                  />
+                  <span className="text-xs sm:text-sm text-gray-400">
+                    J'ai compris les limites de cette simulation
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -164,7 +213,7 @@ const DisclaimerPage: React.FC = () => {
               <div className="shrink-0 mt-0.5">
                 <ShieldAlert className="w-5 h-5 text-amber-400" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-sm font-bold text-white mb-1">
                   Absence de responsabilité
                 </h3>
@@ -174,46 +223,32 @@ const DisclaimerPage: React.FC = () => {
                   simulation. En poursuivant, vous reconnaissez avoir pris
                   connaissance de ces limitations et les accepter pleinement.
                 </p>
+                <label className="flex items-center space-x-3 mt-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={checks[4]}
+                    onChange={() => toggle(4)}
+                    className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 accent-[var(--color-plasma-cyan)] cursor-pointer rounded"
+                  />
+                  <span className="text-xs sm:text-sm text-gray-400">
+                    J'accepte l'absence de responsabilité de l'éditeur
+                  </span>
+                </label>
               </div>
             </div>
-          </div>
-
-          {/* Checkbox */}
-          <div className="glass-panel p-5 rounded-2xl border border-white/10 mt-6">
-            <label className="flex items-start space-x-3 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={accepted}
-                onChange={(e) => setAccepted(e.target.checked)}
-                className="mt-1 w-3 h-3 sm:w-4 sm:h-4 shrink-0 accent-[var(--color-plasma-cyan)] cursor-pointer rounded"
-              />
-              <span className="text-sm text-gray-200 leading-relaxed">
-                J'ai lu et compris les avertissements ci-dessus. Je reconnais
-                que cette simulation{" "}
-                <strong className="text-white">
-                  n'a aucune valeur juridique
-                </strong>
-                , n'est{" "}
-                <strong className="text-white">
-                  pas recevable devant un tribunal
-                </strong>{" "}
-                et ne remplace en aucun cas l'avis d'un professionnel du droit.
-                Je souhaite néanmoins poursuivre à titre informatif.
-              </span>
-            </label>
           </div>
 
           {/* Buttons */}
           <div className="space-y-3 mt-2">
             <button
               onClick={handleContinue}
-              disabled={!accepted}
+              disabled={!allAccepted}
               className={`w-full font-bold py-4 rounded-2xl transition-all flex items-center justify-center space-x-2 sm:space-x-3 group active:scale-95 ${
-                accepted
+                allAccepted
                   ? "bg-[var(--color-plasma-cyan)] hover:bg-[var(--accent-hover)] text-white shadow-[0_0_30px_rgba(34,211,238,0.3)]"
                   : "bg-gray-700/50 text-gray-500 cursor-not-allowed"
               }`}
-              style={{ color: accepted ? "#ffffff" : undefined }}
+              style={{ color: allAccepted ? "#ffffff" : undefined }}
             >
               <span className="text-xs sm:text-sm tracking-wider sm:tracking-widest uppercase">
                 <span className="sm:hidden">J'accepte et continue</span>

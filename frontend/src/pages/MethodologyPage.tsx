@@ -17,6 +17,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 
 const CALCULATION_CATEGORIES = [
   {
@@ -78,9 +79,21 @@ const MethodologyPage: React.FC = () => {
   const handleSubmit = async () => {
     if (!isValidEmail(email) || selected.length === 0) return;
     setSubmitState("loading");
-    // Simulate sending (replace with real API call when backend is ready)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1800));
+      const res = await fetch(
+        "https://hook.eu2.make.com/qq7wul9bqju013r26u95iecsfoxy4p7g",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: email.trim(),
+            categories: selected,
+            source: "methodology_page",
+            timestamp: new Date().toISOString(),
+          }),
+        },
+      );
+      if (!res.ok) throw new Error("Webhook error");
       setSubmitState("success");
     } catch {
       setSubmitState("error");
@@ -97,9 +110,9 @@ const MethodologyPage: React.FC = () => {
     children: React.ReactNode;
   }) => (
     <section className="mb-8 animate-fade-in">
-      <div className="flex items-center space-x-2 mb-4 border-b border-white/10 pb-2">
+      <div className="flex items-center pb-2 mb-4 space-x-2 border-b border-white/10">
         <Icon className="w-5 h-5 text-[var(--color-plasma-cyan)]" />
-        <h2 className="text-sm font-bold uppercase tracking-widest text-white">
+        <h2 className="text-sm font-bold tracking-widest text-white uppercase">
           {title}
         </h2>
       </div>
@@ -114,9 +127,9 @@ const MethodologyPage: React.FC = () => {
     headers: string[];
     rows: string[][];
   }) => (
-    <div className="overflow-hidden rounded-xl border border-white/10 glass-panel">
+    <div className="overflow-hidden border rounded-xl border-white/10 glass-panel">
       <table className="w-full text-xs text-left">
-        <thead className="bg-white/5 uppercase tracking-wider text-gray-400">
+        <thead className="tracking-wider text-gray-400 uppercase bg-white/5">
           <tr>
             {headers.map((h, i) => (
               <th key={i} className="px-4 py-3">
@@ -125,9 +138,9 @@ const MethodologyPage: React.FC = () => {
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5 text-gray-300">
+        <tbody className="text-gray-300 divide-y divide-white/5">
           {rows.map((row, i) => (
-            <tr key={i} className="hover:bg-white/5 transition">
+            <tr key={i} className="transition hover:bg-white/5">
               {row.map((cell, j) => (
                 <td key={j} className="px-4 py-3">
                   {cell}
@@ -159,7 +172,7 @@ const MethodologyPage: React.FC = () => {
       <div className="p-6 pt-8 flex items-center justify-between z-10 sticky top-0 bg-[var(--color-deep-space)]/90 backdrop-blur-xl border-b border-white/5">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition group flex items-center justify-center"
+          className="flex items-center justify-center p-2 transition rounded-full bg-white/5 hover:bg-white/10 group"
         >
           <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-white" />
         </button>
@@ -168,20 +181,20 @@ const MethodologyPage: React.FC = () => {
         </span>
         <button
           onClick={() => navigate("/")}
-          className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition group flex items-center justify-center"
+          className="flex items-center justify-center p-2 transition rounded-full bg-white/5 hover:bg-white/10 group"
           title="Accueil"
         >
           <Home className="w-5 h-5 text-gray-300 group-hover:text-white" />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 py-8 pb-32">
+      <div className="flex-1 px-6 py-8 pb-32 overflow-y-auto">
         {/* Intro */}
         <div className="mb-10 text-center">
-          <h1 className="text-xl font-bold mb-2">
+          <h1 className="mb-2 text-xl font-bold">
             Sources Juridiques & Algorithmiques
           </h1>
-          <p className="text-xs text-gray-400 max-w-sm mx-auto">
+          <p className="max-w-sm mx-auto text-xs text-gray-400">
             Transparence sur les règles de droit et les méthodes de calcul
             utilisées par SimulDivorce (v2026).
           </p>
@@ -206,14 +219,14 @@ const MethodologyPage: React.FC = () => {
 
         {/* 2. Référentiels Calcul */}
         <Section title="2. Référentiels de Calcul" icon={Scale}>
-          <div className="glass-panel p-4 rounded-xl border border-white/10">
+          <div className="p-4 border glass-panel rounded-xl border-white/10">
             <h3 className="text-xs font-bold text-[var(--color-plasma-cyan)] mb-2">
               Prestation Compensatoire
             </h3>
-            <p className="text-xs text-gray-300 mb-2">
+            <p className="mb-2 text-xs text-gray-300">
               Méthodes doctrinales croisées :
             </p>
-            <ul className="list-disc pl-4 space-y-1 text-xs text-gray-400">
+            <ul className="pl-4 space-y-1 text-xs text-gray-400 list-disc">
               <li>
                 <strong>Méthode Calcul PC :</strong> Projections de revenus
                 bruts sur 8 ans, patrimoine, pondération durée × âge, réparation
@@ -235,7 +248,7 @@ const MethodologyPage: React.FC = () => {
 
         {/* 3. Conformité */}
         <Section title="3. Conformité RGPD" icon={ShieldCheck}>
-          <p className="text-xs text-gray-400 mb-4">
+          <p className="mb-4 text-xs text-gray-400">
             L'application respecte le principe de minimisation des données. Les
             calculs de simulation sont réalisés localement dans votre
             navigateur. Seules les données nécessaires à la publicité (Google)
@@ -268,15 +281,15 @@ const MethodologyPage: React.FC = () => {
               {/* Glow effect */}
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-[var(--accent-primary)]/10 rounded-full blur-3xl group-hover:bg-[var(--accent-primary)]/20 transition-all duration-500" />
 
-              <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+              <div className="relative flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[var(--accent-primary)]/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Download className="w-7 h-7 sm:w-8 sm:h-8 text-[var(--accent-primary)]" />
                 </div>
-                <div className="text-center sm:text-left flex-1">
+                <div className="flex-1 text-center sm:text-left">
                   <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] mb-1">
                     Recevoir les formules de calcul par e-mail
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                  <p className="text-xs leading-relaxed text-gray-400 sm:text-sm">
                     Obtenez un PDF détaillant les formules mathématiques et
                     références juridiques utilisées pour chaque calcul.
                   </p>
@@ -322,11 +335,11 @@ const MethodologyPage: React.FC = () => {
               </div>
 
               {/* Content */}
-              <div className="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0">
+              <div className="flex-1 min-h-0 p-4 overflow-y-auto sm:p-6">
                 {submitState === "success" ? (
                   /* Success state */
                   <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
+                    <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-green-500/10">
                       <Check className="w-8 h-8 text-green-400" />
                     </div>
                     <h4 className="text-lg font-bold text-[var(--text-primary)] mb-2">
@@ -469,6 +482,11 @@ const MethodologyPage: React.FC = () => {
           </div>,
           document.body,
         )}
+
+      {/* Ad — content-rich page */}
+      <div className="flex justify-center px-6 pb-12">
+        <AdUnit type="rectangle" />
+      </div>
     </div>
   );
 };

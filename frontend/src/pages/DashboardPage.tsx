@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, ChevronLeft, Home, Scale } from "lucide-react";
 import { legalEngine, type SimulationResult } from "../services/legalEngine";
-import { AdUnit } from "../components/AdUnit";
 import { InfoTooltip } from "../components/InfoTooltip";
 import { SEO } from "../components/SEO";
 
@@ -110,7 +109,7 @@ const DashboardPage: React.FC = () => {
             <Home className="w-5 h-5 text-gray-400 group-hover:text-white" />
           </button>
           <button
-            onClick={() => navigate("/export")}
+            onClick={() => navigate("/transition?to=/export")}
             className="p-2.5 rounded-xl bg-[var(--accent-primary)]/15 hover:bg-[var(--accent-primary)]/25 transition group flex items-center justify-center"
             title="Télécharger le rapport"
           >
@@ -124,7 +123,7 @@ const DashboardPage: React.FC = () => {
         <div className="pb-10 space-y-4 animate-fade-in">
           {/* Prominent Download Button */}
           <button
-            onClick={() => navigate("/export")}
+            onClick={() => navigate("/transition?to=/export")}
             className="w-full bg-[var(--color-plasma-cyan)] hover:bg-[var(--accent-hover)] text-white font-bold py-5 rounded-2xl shadow-[0_0_30px_rgba(34,211,238,0.3)] transition-all flex items-center justify-center gap-2 sm:gap-3 group active:scale-95"
             style={{ color: "#ffffff" }}
           >
@@ -214,10 +213,6 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
           )}
-          {/* Ad MPU */}
-          <div className="flex justify-center col-span-1 mt-6 md:col-span-2">
-            <AdUnit type="rectangle" />
-          </div>
         </div>
       </div>
     </div>

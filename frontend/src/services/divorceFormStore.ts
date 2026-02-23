@@ -236,7 +236,7 @@ export function buildFinancialPayload(
       parseFloat(formData.debtorFutureChildContribution) || 0,
     debtorChangeDate: formData.debtorChangeDate,
     debtorPropertyValue: parseFloat(formData.debtorPropertyValue) || 0,
-    debtorPropertyYield: 3,
+    debtorPropertyYield: parseFloat(formData.debtorPropertyYield) || 3,
     creditorGrossIncome: parseFloat(formData.creditorGrossIncome) || 0,
     creditorIncomeMode: formData.creditorIncomeMode || "monthly",
     creditorChildContribution:
@@ -246,7 +246,7 @@ export function buildFinancialPayload(
       parseFloat(formData.creditorFutureChildContribution) || 0,
     creditorChangeDate: formData.creditorChangeDate,
     creditorPropertyValue: parseFloat(formData.creditorPropertyValue) || 0,
-    creditorPropertyYield: 3,
+    creditorPropertyYield: parseFloat(formData.creditorPropertyYield) || 3,
     creditorRetirementGapYears:
       parseFloat(formData.creditorRetirementGapYears) || 0,
     creditorPreRetirementIncome:

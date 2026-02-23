@@ -8,6 +8,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
+import { AdUnit } from "../components/AdUnit";
 import {
   loadFormData,
   computeAge,
@@ -128,7 +129,7 @@ const RecapitulatifPage: React.FC = () => {
     // Build the financial payload expected by DashboardPage
     const payload = buildFinancialPayload(formData);
     localStorage.setItem("financialData", JSON.stringify(payload));
-    navigate("/dashboard");
+    navigate("/transition?to=/dashboard");
   };
 
   return (
@@ -190,6 +191,13 @@ const RecapitulatifPage: React.FC = () => {
         </div>
         <p className="text-sm text-gray-400">
           Vérifiez vos informations avant de lancer le calcul.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-gray-500">
+          Votre simulation croise jusqu'à trois méthodes doctrinales : Tiers
+          Pondéré (différentiel de revenus nets × durée × âge), INSEE (unités de
+          consommation OCDE) et Calcul PC (revenus bruts projetés sur 8 ans).
+          Les résultats constituent une estimation indicative — seul le JAF fixe
+          souverainement le montant de la prestation compensatoire.
         </p>
       </div>
 
@@ -417,6 +425,11 @@ const RecapitulatifPage: React.FC = () => {
             saisies. Le bouton « Valider & Calculer » lancera le calcul avec les
             données ci-dessus.
           </p>
+        </div>
+
+        {/* Ad */}
+        <div className="flex justify-center pb-4">
+          <AdUnit type="native" className="w-full" />
         </div>
       </div>
 
