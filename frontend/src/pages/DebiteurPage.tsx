@@ -8,6 +8,7 @@ import {
   User,
   Wallet,
   TrendingUp,
+  Percent,
 } from "lucide-react";
 import { InfoTooltip } from "../components/InfoTooltip";
 import { CurrencyInput } from "../components/CurrencyInput";
@@ -69,6 +70,12 @@ const DebiteurPage: React.FC = () => {
   const [debtorPropertyValue, setDebtorPropertyValue] = useState(
     stored.debtorPropertyValue,
   );
+  const [debtorPropertyYield, setDebtorPropertyYield] = useState(
+    stored.debtorPropertyYield || "3",
+  );
+  const [showYieldInput, setShowYieldInput] = useState(
+    stored.debtorPropertyYield !== "" && stored.debtorPropertyYield !== "3",
+  );
   const [debtorExpectsRevenueChange, setDebtorExpectsRevenueChange] = useState(
     stored.debtorExpectsRevenueChange || "no",
   );
@@ -90,7 +97,7 @@ const DebiteurPage: React.FC = () => {
       debtorFutureChildContribution,
       debtorChangeDate,
       debtorPropertyValue,
-      debtorPropertyYield: "3",
+      debtorPropertyYield,
       debtorExpectsRevenueChange,
     });
   };
@@ -387,6 +394,44 @@ const DebiteurPage: React.FC = () => {
                     placeholder="ex: 200 000"
                     className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none"
                   />
+
+                  {/* Toggle yield rate */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowYieldInput((v) => !v);
+                      if (!showYieldInput && debtorPropertyYield === "")
+                        setDebtorPropertyYield("3");
+                    }}
+                    className="mt-3 text-[10px] uppercase tracking-widest text-[var(--color-plasma-cyan)] hover:underline flex items-center space-x-1"
+                  >
+                    <Percent className="w-3 h-3" />
+                    <span>
+                      {showYieldInput
+                        ? "Masquer le taux de rendement"
+                        : "Modifier le taux de rendement ?"}
+                    </span>
+                  </button>
+
+                  {showYieldInput && (
+                    <div className="mt-3">
+                      <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-2">
+                        <Percent className="w-3 h-3" />
+                        <span>Taux de rendement estimé (%)</span>
+                        <InfoTooltip content="Taux de rendement annuel estimé du patrimoine non productif. Par défaut 3 %. Ce taux est propre au débiteur." />
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        value={debtorPropertyYield}
+                        onChange={(e) => setDebtorPropertyYield(e.target.value)}
+                        placeholder="3"
+                        className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none"
+                      />
+                    </div>
+                  )}
                 </div>
               </>
             )}

@@ -8,6 +8,7 @@ import {
   User,
   Wallet,
   TrendingUp,
+  Percent,
 } from "lucide-react";
 import { InfoTooltip } from "../components/InfoTooltip";
 import { CurrencyInput } from "../components/CurrencyInput";
@@ -67,6 +68,12 @@ const CreancierPage: React.FC = () => {
   const [creditorPropertyValue, setCreditorPropertyValue] = useState(
     stored.creditorPropertyValue,
   );
+  const [creditorPropertyYield, setCreditorPropertyYield] = useState(
+    stored.creditorPropertyYield || "3",
+  );
+  const [showYieldInput, setShowYieldInput] = useState(
+    stored.creditorPropertyYield !== "" && stored.creditorPropertyYield !== "3",
+  );
   const [creditorRetirementGapYears, setCreditorRetirementGapYears] = useState(
     stored.creditorRetirementGapYears,
   );
@@ -92,7 +99,7 @@ const CreancierPage: React.FC = () => {
       creditorFutureChildContribution,
       creditorChangeDate,
       creditorPropertyValue,
-      creditorPropertyYield: "3",
+      creditorPropertyYield,
       creditorRetirementGapYears,
       creditorPreRetirementIncome,
       creditorExpectsRevenueChange,
@@ -127,12 +134,12 @@ const CreancierPage: React.FC = () => {
 
       {/* Header */}
       <div
-        className="bg-black/20 backdrop-blur-md border-b border-white/5 p-4 flex justify-between items-center sticky top-0 z-50"
+        className="sticky top-0 z-50 flex items-center justify-between p-4 border-b bg-black/20 backdrop-blur-md border-white/5"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 1rem)" }}
       >
         <button
           onClick={() => navigate(getPreviousPage(currentPath))}
-          className="p-2 rounded-full hover:bg-white/10 group flex items-center justify-center"
+          className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 group"
         >
           <ChevronLeft className="w-5 h-5 text-gray-400 group-hover:text-white" />
         </button>
@@ -141,7 +148,7 @@ const CreancierPage: React.FC = () => {
         </h1>
         <button
           onClick={() => navigate("/")}
-          className="p-2 rounded-full hover:bg-white/10 group flex items-center justify-center"
+          className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 group"
           title="Accueil"
         >
           <Home className="w-5 h-5 text-gray-400 group-hover:text-white" />
@@ -149,7 +156,7 @@ const CreancierPage: React.FC = () => {
       </div>
 
       {/* Progress */}
-      <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 z-10">
+      <div className="z-10 px-4 pt-4 pb-2 sm:px-6 sm:pt-6">
         <div className="flex justify-end mb-6">
           <div className="flex space-x-1">
             {Array.from({ length: totalPages }).map((_, i) => (
@@ -160,7 +167,7 @@ const CreancierPage: React.FC = () => {
             ))}
           </div>
         </div>
-        <h1 className="text-2xl font-bold text-white text-glow mb-2">
+        <h1 className="mb-2 text-2xl font-bold text-white text-glow">
           Informations Créancier
         </h1>
         <p className="text-sm text-gray-400">
@@ -170,7 +177,7 @@ const CreancierPage: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-28 sm:pb-32 animate-fade-in relative z-10 scrollbar-hide space-y-8">
+      <div className="relative z-10 flex-1 px-4 space-y-8 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
         <GuidedStep
           step={0}
           currentStep={currentStep}
@@ -183,13 +190,13 @@ const CreancierPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex items-center space-x-2">
               <User className="w-4 h-4 text-teal-400" />
-              <span className="text-xs uppercase tracking-widest text-teal-400 font-bold">
+              <span className="text-xs font-bold tracking-widest text-teal-400 uppercase">
                 Informations Créancier
               </span>
             </div>
 
             {/* Date de naissance */}
-            <div className="glass-panel p-6 rounded-2xl border border-white/10">
+            <div className="p-6 border glass-panel rounded-2xl border-white/10">
               <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                 <Calendar className="w-3 h-3" />
                 <span>Date de naissance</span>
@@ -211,7 +218,7 @@ const CreancierPage: React.FC = () => {
 
             {/* Net Social */}
             {needsNetIncome && (
-              <div className="glass-panel p-6 rounded-2xl border border-white/10">
+              <div className="p-6 border glass-panel rounded-2xl border-white/10">
                 <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                   <Wallet className="w-3 h-3" />
                   <span>Net Social (€/mois)</span>
@@ -225,7 +232,7 @@ const CreancierPage: React.FC = () => {
                   disabled={noIncomeCreancier}
                   className={`w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none ${noIncomeCreancier ? "opacity-50 cursor-not-allowed" : ""}`}
                 />
-                <label className="flex items-center space-x-2 mt-2 cursor-pointer select-none">
+                <label className="flex items-center mt-2 space-x-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={noIncomeCreancier}
@@ -244,13 +251,13 @@ const CreancierPage: React.FC = () => {
             {showAxelDepondtSteps && (
               <>
                 {/* Revenus actuels avant impôts */}
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <TrendingUp className="w-3 h-3" />
                     <span>Revenus actuels avant impôts</span>
                     <InfoTooltip content="Revenus bruts (avant impôts) du créancier. Vous pouvez saisir le montant annuel ou mensuel." />
                   </label>
-                  <div className="flex mb-3 rounded-lg overflow-hidden border border-white/10">
+                  <div className="flex mb-3 overflow-hidden border rounded-lg border-white/10">
                     <button
                       type="button"
                       onClick={() => setCreditorIncomeMode("monthly")}
@@ -287,7 +294,7 @@ const CreancierPage: React.FC = () => {
                 </div>
 
                 {/* Contribution aux charges des enfants */}
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <Wallet className="w-3 h-3" />
                     <span>
@@ -305,7 +312,7 @@ const CreancierPage: React.FC = () => {
                 </div>
 
                 {/* Changement de revenus prévu ? */}
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <TrendingUp className="w-3 h-3" />
                     <span>
@@ -314,7 +321,7 @@ const CreancierPage: React.FC = () => {
                     </span>
                     <InfoTooltip content="Si le créancier anticipe un changement de revenus dans les 8 ans (reprise d'emploi, retraite, promotion…), répondez Oui pour renseigner les détails." />
                   </label>
-                  <div className="flex rounded-lg overflow-hidden border border-white/10">
+                  <div className="flex overflow-hidden border rounded-lg border-white/10">
                     <button
                       type="button"
                       onClick={() => setCreditorExpectsRevenueChange("no")}
@@ -335,7 +342,7 @@ const CreancierPage: React.FC = () => {
                 {/* Conditional: future income fields */}
                 {creditorExpectsRevenueChange === "yes" && (
                   <>
-                    <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                    <div className="p-6 border glass-panel rounded-2xl border-white/10">
                       <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                         <Wallet className="w-3 h-3" />
                         <span>
@@ -352,7 +359,7 @@ const CreancierPage: React.FC = () => {
                       />
                     </div>
 
-                    <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                    <div className="p-6 border glass-panel rounded-2xl border-white/10">
                       <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                         <Wallet className="w-3 h-3" />
                         <span>
@@ -371,7 +378,7 @@ const CreancierPage: React.FC = () => {
                       />
                     </div>
 
-                    <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                    <div className="p-6 border glass-panel rounded-2xl border-white/10">
                       <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                         <Calendar className="w-3 h-3" />
                         <span>Date prévisible des modifications</span>
@@ -388,7 +395,7 @@ const CreancierPage: React.FC = () => {
                 )}
 
                 {/* Patrimoine propre non producteur */}
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <Wallet className="w-3 h-3" />
                     <span>Patrimoine propre non producteur de revenus (€)</span>
@@ -401,10 +408,43 @@ const CreancierPage: React.FC = () => {
                     placeholder="ex: 100 000"
                     className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none"
                   />
+
+                  {/* Toggle yield rate */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowYieldInput((v) => !v);
+                      if (!showYieldInput && creditorPropertyYield === "") setCreditorPropertyYield("3");
+                    }}
+                    className="mt-3 text-[10px] uppercase tracking-widest text-[var(--color-plasma-cyan)] hover:underline flex items-center space-x-1"
+                  >
+                    <Percent className="w-3 h-3" />
+                    <span>{showYieldInput ? "Masquer le taux de rendement" : "Modifier le taux de rendement ?"}</span>
+                  </button>
+
+                  {showYieldInput && (
+                    <div className="mt-3">
+                      <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-2">
+                        <Percent className="w-3 h-3" />
+                        <span>Taux de rendement estimé (%)</span>
+                        <InfoTooltip content="Taux de rendement annuel estimé du patrimoine non productif. Par défaut 3 %. Ce taux est propre au créancier." />
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        value={creditorPropertyYield}
+                        onChange={(e) => setCreditorPropertyYield(e.target.value)}
+                        placeholder="3"
+                        className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Écart de retraite */}
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <Wallet className="w-3 h-3" />
                     <span>
@@ -424,7 +464,7 @@ const CreancierPage: React.FC = () => {
                   />
                 </div>
 
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <Wallet className="w-3 h-3" />
                     <span>
@@ -458,11 +498,11 @@ const CreancierPage: React.FC = () => {
           className={`w-full max-w-md mx-auto bg-[var(--color-plasma-cyan)] hover:bg-[var(--accent-hover)] text-white font-bold py-3 sm:py-5 rounded-2xl shadow-[0_0_30px_rgba(34,211,238,0.3)] transition-all flex items-center justify-center space-x-2 sm:space-x-3 group active:scale-95 ${isGuided && !allDone ? "opacity-20 blur-[3px]" : ""}`}
           style={{ color: "#ffffff" }}
         >
-          <span className="text-xs sm:text-sm tracking-wider sm:tracking-widest uppercase">
+          <span className="text-xs tracking-wider uppercase sm:text-sm sm:tracking-widest">
             <span className="sm:hidden">Valider</span>
             <span className="hidden sm:inline">Valider et poursuivre</span>
           </span>
-          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-4 h-4 transition-transform sm:w-5 sm:h-5 group-hover:translate-x-1" />
         </button>
       </div>
       <GuidedHeaderTour />
