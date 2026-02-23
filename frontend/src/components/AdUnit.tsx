@@ -2,15 +2,10 @@ import React from "react";
 
 interface AdUnitProps {
   type: "banner" | "native" | "rectangle";
-  slotId?: string; // Generic placeholder for AdMob slot ID
   className?: string;
 }
 
-export const AdUnit: React.FC<AdUnitProps> = ({
-  type,
-  slotId: _slotId,
-  className = "",
-}) => {
+export const AdUnit: React.FC<AdUnitProps> = ({ type, className = "" }) => {
   // Mock Ad Rendering
   if (type === "banner") {
     // AD_01 Sticky Bottom

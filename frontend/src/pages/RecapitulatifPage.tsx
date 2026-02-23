@@ -5,9 +5,6 @@ import {
   ChevronLeft,
   Home,
   Scale,
-  Wallet,
-  Building2,
-  HeartPulse,
   CheckCircle,
 } from "lucide-react";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
@@ -53,15 +50,6 @@ const custodyLabel = (t: string) =>
       : t === "reduced"
         ? "Réduite (Élargi)"
         : t;
-
-const regimeLabel = (r: string) =>
-  r === "community"
-    ? "Communauté"
-    : r === "separation"
-      ? "Séparation de biens"
-      : r === "participation"
-        ? "Participation aux acquêts"
-        : r;
 
 // ---------------------------------------------------------------------------
 // Row component: a single key ➜ value line
@@ -115,9 +103,6 @@ const RecapitulatifPage: React.FC = () => {
   const choices = useMemo(() => getCalculationChoices(), []);
 
   const hasPC = choices.selectedCalcs.includes("prestationCompensatoire");
-  const hasPA = choices.selectedCalcs.includes("pensionAlimentaire");
-  const hasLiq = choices.selectedCalcs.includes("liquidation");
-  const hasRAV = choices.selectedCalcs.includes("resteAVivre");
   const showAxelDepondt =
     hasPC &&
     (choices.selectedMethods.prestationCompensatoire || []).includes(
@@ -130,18 +115,10 @@ const RecapitulatifPage: React.FC = () => {
     ) ||
       (choices.selectedMethods.prestationCompensatoire || []).includes(
         "insee",
-      ) ||
-      (choices.selectedMethods.prestationCompensatoire || []).includes(
-        "paBased",
       ));
   const pcNeedsFamilyData =
     hasPC &&
-    ((choices.selectedMethods.prestationCompensatoire || []).includes(
-      "insee",
-    ) ||
-      (choices.selectedMethods.prestationCompensatoire || []).includes(
-        "paBased",
-      ));
+    (choices.selectedMethods.prestationCompensatoire || []).includes("insee");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -430,146 +407,6 @@ const RecapitulatifPage: React.FC = () => {
                 )}
               </Section>
             )}
-          </>
-        )}
-
-        {/* ════════════════════════════════════════ */}
-        {/* PENSION ALIMENTAIRE                      */}
-        {/* ════════════════════════════════════════ */}
-        {hasPA && (
-          <>
-            <Section
-              icon={<Wallet className="w-4 h-4" />}
-              color="text-amber-400"
-              category="Pension Alimentaire"
-              subcategory="Revenus"
-            >
-              <Row
-                label="Net Social Créancier"
-                value={formatCurrency(formData.myIncome)}
-              />
-              <Row
-                label="Revenu Débiteur"
-                value={formatCurrency(formData.spouseIncome)}
-              />
-            </Section>
-
-            <Section
-              icon={<Wallet className="w-4 h-4" />}
-              color="text-amber-400"
-              category="Pension Alimentaire"
-              subcategory="Famille"
-            >
-              <Row label="Nombre d'enfants" value={formData.childrenCount} />
-              {formData.childrenCount > 0 &&
-                formData.childrenAges.length > 0 && (
-                  <Row
-                    label="Âges des enfants"
-                    value={formData.childrenAges
-                      .slice(0, formData.childrenCount)
-                      .map((a) => `${a} ans`)
-                      .join(", ")}
-                  />
-                )}
-              {formData.childrenCount > 0 && (
-                <Row
-                  label="Type de garde"
-                  value={custodyLabel(formData.custodyType)}
-                />
-              )}
-            </Section>
-          </>
-        )}
-
-        {/* ════════════════════════════════════════ */}
-        {/* LIQUIDATION (SOULTE)                     */}
-        {/* ════════════════════════════════════════ */}
-        {hasLiq && (
-          <>
-            <Section
-              icon={<Building2 className="w-4 h-4" />}
-              color="text-indigo-400"
-              category="Liquidation (Soulte)"
-              subcategory="Régime"
-            >
-              <Row
-                label="Régime matrimonial"
-                value={regimeLabel(formData.matrimonialRegime)}
-              />
-            </Section>
-
-            <Section
-              icon={<Building2 className="w-4 h-4" />}
-              color="text-indigo-400"
-              category="Liquidation (Soulte)"
-              subcategory="Capital"
-            >
-              <Row
-                label="Valeur vénale du bien"
-                value={formatCurrency(formData.assetsValue)}
-              />
-              <Row
-                label="Capital Restant Dû (CRD)"
-                value={formatCurrency(formData.assetsCRD)}
-              />
-              <Row
-                label="Patrimoine net"
-                value={formatCurrency(
-                  formData.assetsValue - formData.assetsCRD,
-                )}
-              />
-              {formData.matrimonialRegime !== "separation" && (
-                <>
-                  <Row
-                    label="Récompenses Créancier"
-                    value={formatCurrency(formData.rewardsAlice)}
-                  />
-                  <Row
-                    label="Récompenses Débiteur"
-                    value={formatCurrency(formData.rewardsBob)}
-                  />
-                </>
-              )}
-            </Section>
-          </>
-        )}
-
-        {/* ════════════════════════════════════════ */}
-        {/* RESTE A VIVRE                            */}
-        {/* ════════════════════════════════════════ */}
-        {hasRAV && (
-          <>
-            <Section
-              icon={<HeartPulse className="w-4 h-4" />}
-              color="text-emerald-400"
-              category="Reste à Vivre"
-              subcategory="Revenus"
-            >
-              <Row
-                label="Net Social Créancier"
-                value={formatCurrency(formData.myIncome)}
-              />
-            </Section>
-
-            <Section
-              icon={<HeartPulse className="w-4 h-4" />}
-              color="text-emerald-400"
-              category="Reste à Vivre"
-              subcategory="Charges"
-            >
-              <Row
-                label="Impôts mensuels"
-                value={formatCurrency(formData.myTaxes)}
-              />
-              <Row
-                label="Loyer / Crédit immobilier"
-                value={formatCurrency(formData.myRent)}
-              />
-              <Row
-                label="Charges fixes"
-                value={formatCurrency(formData.myCharges)}
-              />
-            </Section>
           </>
         )}
 
