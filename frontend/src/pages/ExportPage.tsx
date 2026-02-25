@@ -34,10 +34,10 @@ const ExportPage: React.FC = () => {
     }
   });
 
-  const generatePDF = () => {
+  const generatePDF = async () => {
     if (!data) return;
     try {
-      pdfGenerator.generateReport(data.financial, data.simulation);
+      await pdfGenerator.generateReport(data.financial, data.simulation);
     } catch (e) {
       console.error(e);
       alert(

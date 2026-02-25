@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { SEO, breadcrumbJsonLd } from "../components/SEO";
 import { AdUnit } from "../components/AdUnit";
+import { generateMethodologyPdf } from "../services/methodologyPdfGenerator";
 
 const CALCULATION_CATEGORIES = [
   {
@@ -76,10 +77,33 @@ const MethodologyPage: React.FC = () => {
   const isValidEmail = (e: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim());
 
+  const handleDownload = async () => {
+    const blob = await generateMethodologyPdf();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `SimulDivorce_Methodologie_${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+  };
+
   const handleSubmit = async () => {
     if (!isValidEmail(email) || selected.length === 0) return;
     setSubmitState("loading");
     try {
+      const blob = await generateMethodologyPdf();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          resolve(result.split(",")[1]);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
       const res = await fetch(
         "https://hook.eu2.make.com/qq7wul9bqju013r26u95iecsfoxy4p7g",
         {
@@ -90,6 +114,8 @@ const MethodologyPage: React.FC = () => {
             categories: selected,
             source: "methodology_page",
             timestamp: new Date().toISOString(),
+            pdf_base64: base64,
+            pdf_filename: `SimulDivorce_Methodologie_${new Date().toISOString().slice(0, 10)}.pdf`,
           }),
         },
       );
@@ -445,36 +471,53 @@ const MethodologyPage: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Submit button */}
-                    <button
-                      onClick={handleSubmit}
-                      disabled={
-                        !isValidEmail(email) ||
-                        selected.length === 0 ||
-                        submitState === "loading"
-                      }
-                      className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
-                        !isValidEmail(email) ||
-                        selected.length === 0 ||
-                        submitState === "loading"
-                          ? "bg-[var(--text-muted)]/20 text-[var(--text-muted)] cursor-not-allowed"
-                          : "bg-[var(--accent-primary)] text-white hover:opacity-90 active:scale-[0.98]"
-                      }`}
-                      type="button"
-                    >
-                      {submitState === "loading" ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Envoi en cours…
-                        </>
-                      ) : (
-                        <>
-                          <Mail className="w-4 h-4" />
-                          Envoyer le PDF ({selected.length}{" "}
-                          {selected.length > 1 ? "calculs" : "calcul"})
-                        </>
-                      )}
-                    </button>
+                    {/* Buttons */}
+                    <div className="space-y-2.5">
+                      {/* Send by email */}
+                      <button
+                        onClick={handleSubmit}
+                        disabled={
+                          !isValidEmail(email) ||
+                          selected.length === 0 ||
+                          submitState === "loading"
+                        }
+                        className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+                          !isValidEmail(email) ||
+                          selected.length === 0 ||
+                          submitState === "loading"
+                            ? "bg-[var(--text-muted)]/20 text-[var(--text-muted)] cursor-not-allowed"
+                            : "bg-[var(--accent-primary)] text-white hover:opacity-90 active:scale-[0.98]"
+                        }`}
+                        type="button"
+                      >
+                        {submitState === "loading" ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Envoi en cours…
+                          </>
+                        ) : (
+                          <>
+                            <Mail className="w-4 h-4" />
+                            Envoyer le PDF par e-mail
+                          </>
+                        )}
+                      </button>
+
+                      {/* Download locally (no webhook) */}
+                      <button
+                        onClick={handleDownload}
+                        disabled={selected.length === 0}
+                        className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all border ${
+                          selected.length === 0
+                            ? "border-[var(--text-muted)]/20 text-[var(--text-muted)] cursor-not-allowed"
+                            : "border-[var(--accent-primary)]/40 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 active:scale-[0.98]"
+                        }`}
+                        type="button"
+                      >
+                        <Download className="w-4 h-4" />
+                        Télécharger le PDF
+                      </button>
+                    </div>
                   </>
                 )}
               </div>

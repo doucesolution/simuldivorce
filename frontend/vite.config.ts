@@ -29,4 +29,16 @@ function versionJsonPlugin(): Plugin {
 export default defineConfig({
   base: "/",
   plugins: [react(), versionJsonPlugin()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          /* Core React runtime — cached long-term */
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          /* Heavy PDF library — loaded only when user exports */
+          "vendor-jspdf": ["jspdf"],
+        },
+      },
+    },
+  },
 });

@@ -1,4 +1,4 @@
-import { jsPDF } from "jspdf";
+import type { jsPDF as JsPDFType } from "jspdf";
 import type { SimulationResult, FinancialData } from "./legalEngine";
 import { getCalculationChoices } from "./divorceFormStore";
 
@@ -8,8 +8,12 @@ const COLOR_ACCENT = "#14B8A6"; // Teal 500
 const COLOR_MUTED = "#64748B"; // Slate 500
 
 export const pdfGenerator = {
-  generateReport: (data: FinancialData, results: SimulationResult): void => {
-    const doc = new jsPDF({
+  generateReport: async (
+    data: FinancialData,
+    results: SimulationResult,
+  ): Promise<void> => {
+    const { jsPDF } = await import("jspdf");
+    const doc: JsPDFType = new jsPDF({
       orientation: "portrait",
       unit: "mm",
       format: "a4",
