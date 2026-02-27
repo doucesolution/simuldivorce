@@ -1,133 +1,244 @@
+<!-- DOCTYPE html: declares this as an HTML5 document — must be the very first line for standards-mode rendering -->
 <!doctype html>
+<!-- Root <html> element for the entire document -->
+<!-- lang="fr": sets French as the document language for search engines, screen readers, and spell-checkers -->
+<!-- dir="ltr": left-to-right text direction (standard for French) -->
+<!-- prefix="og: ...": declares the Open Graph namespace so og: meta properties are valid RDFa -->
 <html lang="fr" dir="ltr" prefix="og: https://ogp.me/ns#">
+  <!-- Head section: contains all metadata, scripts, styles, SEO tags, and PWA configuration (nothing rendered visually) -->
   <head>
-    <!-- Immediate theme detection to avoid flash -->
+    <!-- ═══ THEME DETECTION SCRIPT ═══ -->
+    <!-- This inline script runs synchronously BEFORE any CSS or content loads -->
+    <!-- Purpose: detect the user's OS color scheme preference and apply the correct theme class immediately -->
+    <!-- Without this, users would see a brief flash of the wrong theme (FOUC — Flash of Unstyled Content) -->
     <script>
+      // IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope with variables
       (function () {
+        // Use the matchMedia API to check if the user's OS/browser prefers dark color scheme
         var prefersDark = window.matchMedia(
           "(prefers-color-scheme: dark)",
         ).matches;
+        // Add either "dark" or "light" class to the <html> element so CSS custom properties (variables) activate immediately
+        // This class is used by index.css to set the correct color palette via :root.dark / :root.light selectors
         document.documentElement.classList.add(prefersDark ? "dark" : "light");
+        // Find the <meta name="theme-color"> tag to update the browser's UI chrome color (address bar, status bar)
         var meta = document.querySelector('meta[name="theme-color"]');
+        // If the meta tag exists, set its content to match the detected theme
+        // Dark: #020617 (Slate 950 — deep navy); Light: #f8fafc (Slate 50 — near-white)
         if (meta)
           meta.setAttribute("content", prefersDark ? "#020617" : "#f8fafc");
       })();
     </script>
-    <!-- Google Tag Manager (deferred until after first paint) -->
+    <!-- ═══ GOOGLE TAG MANAGER (GTM) ═══ -->
+    <!-- GTM: analytics and marketing tag management container for tracking user behavior and conversions -->
+    <!-- DEFERRED LOADING: wrapped in a "load" event listener so it runs only AFTER the page fully loads -->
+    <!-- This prevents GTM from competing with critical rendering resources during the initial paint -->
     <script>
+      // Wait for the window "load" event — fires after ALL resources (images, CSS, fonts, scripts) finish loading
       window.addEventListener("load", function () {
+        // setTimeout with 0ms delay pushes execution to the next event loop tick, yielding to any pending UI work
         setTimeout(function () {
+          // Standard GTM bootstrap snippet (minified pattern provided by Google)
+          // Parameters: w=window, d=document, s="script", l="dataLayer", i=GTM container ID
           (function (w, d, s, l, i) {
+            // Initialize the dataLayer array if it doesn't exist — GTM reads events and variables from this array
             w[l] = w[l] || [];
+            // Push the gtm.start timestamp and the gtm.js initialization event into the dataLayer
             w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+            // Get the first <script> tag in the document to use as a reference for insertion
             var f = d.getElementsByTagName(s)[0],
+              // Create a new <script> element that will load the GTM JavaScript library
               j = d.createElement(s),
+              // Build the dataLayer URL parameter (empty string when using the default "dataLayer" name)
               dl = l != "dataLayer" ? "&l=" + l : "";
+            // Set async=true so the GTM script loads in the background without blocking HTML parsing
             j.async = true;
+            // Construct the full GTM script URL with the container ID and optional dataLayer parameter
             j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+            // Insert the new GTM script element before the first existing script tag in the DOM
             f.parentNode.insertBefore(j, f);
+            // Invoke the IIFE with the GTM container ID "GTM-KZC29HKM" specific to this site
           })(window, document, "script", "dataLayer", "GTM-KZC29HKM");
         }, 0);
       });
     </script>
     <!-- End Google Tag Manager -->
 
+    <!-- Character encoding: UTF-8 supports all Unicode characters including French accented letters (é, è, ê, ç, etc.) -->
     <meta charset="UTF-8" />
+    <!-- Viewport meta tag: essential for responsive design on mobile devices -->
+    <!-- width=device-width: viewport width matches the device's screen width -->
+    <!-- initial-scale=1.0: no zoom applied on initial page load -->
+    <!-- maximum-scale=5.0: allows pinch-to-zoom up to 5x (accessibility best practice — don't disable zoom) -->
+    <!-- viewport-fit=cover: extends the layout into safe-area insets on notched devices (iPhone X and later) -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover"
     />
 
-    <!-- PWA Meta Tags -->
+    <!-- ═══ PWA (Progressive Web App) META TAGS ═══ -->
+    <!-- These tags configure how the app appears and behaves when installed on a user's device -->
+    <!-- They control the browser chrome color, splash screen, and app-like behavior on mobile platforms -->
+
+    <!-- theme-color: sets the browser's address bar / toolbar color to match the dark theme background -->
+    <!-- Value #020617 (Slate 950) gives a seamless dark-mode look; overridden dynamically by the theme script above -->
     <meta name="theme-color" content="#020617" />
+    <!-- background-color: displayed on the PWA splash screen while the app is loading after launch -->
     <meta name="background-color" content="#020617" />
+    <!-- apple-mobile-web-app-capable: enables full-screen (standalone) mode when added to iOS home screen -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- apple-mobile-web-app-status-bar-style: "black-translucent" makes the iOS status bar overlay the app content -->
+    <!-- This allows the app background to extend behind the status bar for an immersive look -->
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
+    <!-- apple-mobile-web-app-title: the name shown under the app icon on the iOS home screen -->
     <meta name="apple-mobile-web-app-title" content="SimulDivorce" />
+    <!-- mobile-web-app-capable: Chrome/Android equivalent of apple-mobile-web-app-capable for standalone mode -->
     <meta name="mobile-web-app-capable" content="yes" />
+    <!-- application-name: the app name used by Windows when pinning the site to the taskbar or start menu -->
     <meta name="application-name" content="SimulDivorce" />
+    <!-- msapplication-TileColor: background color for the tile on Windows 8/10 when pinning the app -->
     <meta name="msapplication-TileColor" content="#020617" />
+    <!-- msapplication-tap-highlight: disables the gray tap highlight rectangle on Windows Phone / Edge -->
     <meta name="msapplication-tap-highlight" content="no" />
+    <!-- format-detection: prevents mobile browsers from auto-detecting and linking phone numbers in the content -->
     <meta name="format-detection" content="telephone=no" />
 
-    <!-- Primary SEO -->
+    <!-- ═══ PRIMARY SEO (Search Engine Optimization) ═══ -->
+    <!-- These tags help search engines understand, index, and display the site correctly in search results -->
+
+    <!-- Page title: the most important on-page SEO signal — displayed in browser tabs and search result headlines -->
+    <!-- Includes the brand name, primary keyword ("Simulateur Divorce Gratuit"), and secondary keyword ("Prestation Compensatoire") -->
     <title>
       SimulDivorce — Simulateur Divorce Gratuit | Prestation Compensatoire
     </title>
+    <!-- Meta description: shown as the snippet text below the title in Google search results -->
+    <!-- Should be 150-160 characters, compelling, and include primary keywords naturally -->
     <meta
       name="description"
       content="Simulez gratuitement votre prestation compensatoire. Calculs locaux et confidentiels. Trois méthodes croisées : Calcul PC, Tiers Pondéré, INSEE."
     />
+    <!-- Meta keywords: list of relevant search terms (low SEO impact in modern Google, but used by some engines) -->
+    <!-- Targets French divorce-related queries including the current year (2026) for freshness signals -->
     <meta
       name="keywords"
       content="simulation divorce, prestation compensatoire, calcul divorce, simulateur divorce gratuit, divorce en ligne, outil divorce France, calcul prestation compensatoire 2026"
     />
+    <!-- Author meta: identifies the content creator for search engines -->
     <meta name="author" content="SimulDivorce" />
+    <!-- Robots directive: instructs search engine crawlers on how to handle this page -->
+    <!-- index: allow this page to appear in search results; follow: crawl all links on this page -->
+    <!-- max-snippet:-1: no limit on text snippet length; max-image-preview:large: allow large image previews -->
+    <!-- max-video-preview:-1: no limit on video preview duration in search results -->
     <meta
       name="robots"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     />
+    <!-- Canonical URL: tells search engines this is the definitive URL for this content -->
+    <!-- Prevents duplicate content issues if the site is accessible via multiple URLs (www, non-www, etc.) -->
     <link rel="canonical" href="https://simuldivorce.fr/" />
 
-    <!-- Open Graph -->
+    <!-- ═══ OPEN GRAPH (OG) META TAGS ═══ -->
+    <!-- Open Graph protocol: controls how the page appears when shared on Facebook, LinkedIn, WhatsApp, etc. -->
+    <!-- These tags generate the rich preview card (title, description, image) shown in social media feeds -->
+
+    <!-- og:type "website": identifies this as a general website (other types: article, product, etc.) -->
     <meta property="og:type" content="website" />
+    <!-- og:locale: specifies the content language/region — fr_FR targets French speakers in France -->
     <meta property="og:locale" content="fr_FR" />
+    <!-- og:site_name: the overall website name shown above the title in social media cards -->
     <meta property="og:site_name" content="SimulDivorce" />
+    <!-- og:title: the headline displayed in the social media share preview card -->
     <meta
       property="og:title"
       content="SimulDivorce — Simulateur Divorce Gratuit | Prestation Compensatoire"
     />
+    <!-- og:description: the body text shown below the title in the social media preview card -->
     <meta
       property="og:description"
       content="Simulez gratuitement votre prestation compensatoire. Calculs locaux et confidentiels. Trois méthodes croisées : Calcul PC, Tiers Pondéré, INSEE."
     />
+    <!-- og:url: the canonical URL for this content — social platforms use this to avoid duplicate shares -->
     <meta property="og:url" content="https://simuldivorce.fr/" />
+    <!-- og:image: the preview image shown in the social media card (512x512 SVG icon) -->
     <meta property="og:image" content="https://simuldivorce.fr/icon-512.svg" />
+    <!-- og:image:width and og:image:height: explicit dimensions help platforms render the image without re-fetching -->
     <meta property="og:image:width" content="512" />
     <meta property="og:image:height" content="512" />
+    <!-- og:image:alt: alternative text for the preview image — important for accessibility on social platforms -->
     <meta
       property="og:image:alt"
       content="SimulDivorce — Simulateur de divorce en ligne"
     />
 
-    <!-- Twitter Card -->
+    <!-- ═══ TWITTER CARD META TAGS ═══ -->
+    <!-- Twitter Cards: control how the page appears when shared on Twitter/X -->
+    <!-- "summary" type displays a small square image with title and description -->
+
+    <!-- twitter:card "summary": requests the small card format (vs. "summary_large_image" for wide images) -->
     <meta name="twitter:card" content="summary" />
+    <!-- twitter:title: the headline for the Twitter share card -->
     <meta
       name="twitter:title"
       content="SimulDivorce — Simulateur Divorce Gratuit"
     />
+    <!-- twitter:description: the description shown below the title in the Twitter card -->
     <meta
       name="twitter:description"
       content="Simulez gratuitement votre prestation compensatoire. Calculs locaux et confidentiels."
     />
+    <!-- twitter:image: the thumbnail image displayed in the Twitter share card -->
     <meta name="twitter:image" content="https://simuldivorce.fr/icon-512.svg" />
 
-    <!-- Geo & Language -->
+    <!-- ═══ GEO & LANGUAGE META TAGS ═══ -->
+    <!-- These tags help search engines and directories understand the geographic and linguistic targeting -->
+
+    <!-- geo.region: ISO 3166-1 country code — FR targets France for local search results -->
     <meta name="geo.region" content="FR" />
+    <!-- geo.placename: human-readable location name for geographic targeting -->
     <meta name="geo.placename" content="France" />
+    <!-- language: specifies the primary content language (used by some search engines and directories) -->
     <meta name="language" content="French" />
+    <!-- content-language HTTP-equiv: declares the document language via an HTTP header equivalent -->
     <meta http-equiv="content-language" content="fr" />
 
-    <!-- Icons -->
+    <!-- ═══ FAVICON AND TOUCH ICONS ═══ -->
+    <!-- These define the icons shown in browser tabs, bookmarks, and mobile home screens -->
+
+    <!-- Favicon: SVG icon displayed in the browser tab — uses 192px version for clarity at small sizes -->
     <link rel="icon" type="image/svg+xml" href="/icon-192.svg" />
+    <!-- Apple touch icon: the icon displayed when iOS users add the site to their home screen -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
 
-    <!-- Preconnect for performance -->
+    <!-- ═══ PRECONNECT AND DNS-PREFETCH FOR PERFORMANCE ═══ -->
+    <!-- These resource hints tell the browser to start connecting to third-party origins early -->
+    <!-- Preconnect: performs DNS lookup + TCP handshake + TLS negotiation ahead of time -->
+    <!-- DNS-prefetch: performs only DNS lookup (lighter, broader browser support, used as fallback) -->
+
+    <!-- Preconnect to Google Tag Manager origin — reduces latency when the GTM script loads after page load -->
     <link
       rel="preconnect"
       href="https://www.googletagmanager.com"
       crossorigin
     />
+    <!-- Preconnect to Google Fonts API — speeds up font stylesheet fetch if fonts are loaded -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- Preconnect to Google Fonts static CDN (serves the actual font files) — crossorigin required for CORS -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- DNS-prefetch fallback for GTM — resolves the domain name even if preconnect is not supported -->
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <!-- DNS-prefetch for Google Fonts — pre-resolves the DNS for faster font loading -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <!-- DNS-prefetch for Google AdSense — pre-resolves the ad network domain for faster ad loading -->
     <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
-    <!-- Global JSON-LD: Organization + WebApplication -->
+    <!-- ═══ JSON-LD STRUCTURED DATA ═══ -->
+    <!-- JSON-LD (JavaScript Object Notation for Linked Data): machine-readable structured data for search engines -->
+    <!-- Google uses this to generate rich results (knowledge panels, rich snippets) in search results -->
+    <!-- The @graph array contains multiple linked entities describing the organization, website, and application -->
+    <!-- This structured data helps Google understand that SimulDivorce is a free web application by an organization -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -179,9 +290,12 @@
         ]
       }
     </script>
+    <!-- End of head section: all metadata and configuration complete -->
   </head>
+  <!-- Body section: the visible content of the page — React takes over the #root div below -->
   <body>
-    <!-- Google Tag Manager (noscript) -->
+    <!-- GTM noscript fallback: loads GTM via a hidden iframe for users who have JavaScript disabled -->
+    <!-- This ensures basic analytics tracking even without JS, using an invisible 0x0 iframe -->
     <noscript
       ><iframe
         src="https://www.googletagmanager.com/ns.html?id=GTM-KZC29HKM"
@@ -192,7 +306,13 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
+    <!-- Root mount point: React's createRoot() in main.tsx attaches the entire application to this div -->
+    <!-- All React components render inside this element — it starts empty and is hydrated by JavaScript -->
     <div id="root"></div>
+    <!-- Main application entry point: loads main.tsx as an ES module -->
+    <!-- type="module" enables ES module syntax (import/export) and defers execution automatically -->
+    <!-- Vite's dev server handles HMR (Hot Module Replacement) through this script in development -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
+  <!-- End of the HTML document -->
 </html>

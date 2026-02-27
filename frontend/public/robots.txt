@@ -3,19 +3,3 @@ Allow: /
 
 # Sitemap
 Sitemap: https://simuldivorce.fr/sitemap.xml
-
-# Disallow app-internal routes that should not be indexed
-Disallow: /prestation-compensatoire
-Disallow: /informations-debiteur
-Disallow: /informations-creancier
-Disallow: /recapitulatif
-Disallow: /dashboard
-Disallow: /export
-
-# Allow crawling of all public pages
-Allow: /disclaimer
-Allow: /guide
-Allow: /privacy
-Allow: /terms
-Allow: /methodology
-Allow: /glossary

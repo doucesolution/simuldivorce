@@ -1,68 +1,116 @@
+/* Import TailwindCSS v4 — this single directive loads Tailwind's utility-first CSS framework */
+/* Tailwind scans the project's source files and generates only the CSS classes actually used in the codebase */
 @import "tailwindcss";
 
+/* @font-face: declares the custom "FS Rosa" font family for use throughout the application */
+/* This is the primary brand font used for headings, body text, and UI elements */
 @font-face {
+  /* Register the font under the name "FS Rosa" so it can be referenced via font-family: "FS Rosa" */
   font-family: "FS Rosa";
+  /* Source files: the browser tries woff2 first (smaller, faster) and falls back to ttf (broader support) */
+  /* format() hints help the browser skip downloads for unsupported formats */
   src:
     url("./assets/FS-Rosa-Regular.woff2") format("woff2"),
     url("./assets/FS-Rosa-Regular.ttf") format("truetype");
+  /* font-weight 400: this file contains the regular (normal) weight variant only */
   font-weight: 400;
+  /* font-style normal: this file contains the upright (non-italic) variant */
   font-style: normal;
+  /* font-display: swap — show fallback font immediately, then swap to FS Rosa once it loads */
+  /* This prevents invisible text (FOIT) and improves Largest Contentful Paint (LCP) */
   font-display: swap;
 }
 
 /* ============================================
    HIGH CONTRAST DESIGN SYSTEM WITH DARK MODE
    ============================================ */
+/* This design system uses CSS custom properties (variables) to define a complete color palette */
+/* The same variable names are used everywhere in the app — switching themes only requires changing these values */
+/* The system supports three modes: OS-default (via @media), manual light (.light class), and manual dark (.dark class) */
 
+/* :root selector targets the <html> element — these are the DEFAULT (light mode) color values */
+/* These variables cascade to all elements in the document unless overridden by a more specific selector */
 :root {
-  /* Light Mode - Requested Palette (Refined) */
+  /* ── Light Mode Color Palette (Default) ── */
+
+  /* --bg-primary: main page background color — Slate 100, a soft warm gray that's easy on the eyes */
   --bg-primary: #f1f5f9; /* Slate 100 - Soft warm gray, easy on eyes */
+  /* --bg-secondary: card/panel backgrounds — Slate 50, slightly lighter than the page to create depth */
   --bg-secondary: #f8fafc; /* Slate 50 - Cards slightly lighter than page */
+  /* --bg-tertiary: elevated surfaces and hover states — Slate 200 for subtle contrast layering */
   --bg-tertiary: #e2e8f0;
 
+  /* --text-primary: main body text color — Slate 800, softer than pure black for reduced eye strain */
   --text-primary: #1e293b; /* Slate 800 - Softer than pure black */
+  /* --text-secondary: supporting text (labels, subtitles) — Slate 700 for visual hierarchy */
   --text-secondary: #334155; /* Slate 700 */
+  /* --text-muted: de-emphasized text (captions, placeholders) — Slate 500 for lowest text priority */
   --text-muted: #64748b; /* Slate 500 */
 
+  /* --accent-primary: brand accent color for buttons, links, active states — Teal 600, professional and sober */
   --accent-primary: #0d9488; /* Teal 600 - More professional/sober than Teal 500 */
+  /* --accent-hover: darker teal for hover/active states on interactive accent elements */
   --accent-hover: #0f766e; /* Teal 700 */
+  /* --accent-light: very subtle teal tint used as background for accent-highlighted areas */
   --accent-light: #f0fdfa; /* Teal 50 - Very subtle tint */
 
+  /* --border-color: default border color for cards, inputs, dividers — Slate 300 for subtle separation */
   --border-color: #cbd5e1; /* Slate 300 */
+  /* --border-focus: border color when an input or interactive element has keyboard focus — matches brand accent */
   --border-focus: #0d9488;
 
-  /* Glass effect (Subtle) */
+  /* ── Glass Morphism Effect Variables ── */
+  /* Used by the .glass-panel utility class for frosted-glass card effects */
+  /* --glass-bg: semi-transparent white background with 95% opacity for the frosted glass look */
   --glass-bg: rgba(248, 250, 252, 0.95);
+  /* --glass-border: semi-transparent border for glass panels — provides subtle edge definition */
   --glass-border: rgba(226, 232, 240, 0.6);
 
-  /* Legacy aliases used by pages */
+  /* ── Legacy Variable Aliases ── */
+  /* These older variable names are still referenced by some page components */
+  /* They map to the new design system values for backward compatibility */
   --color-deep-space: var(--bg-primary);
   --color-plasma-cyan: #0d9488;
   --color-nebula-blue: #1e293b;
   --color-cosmic-dust: #1e293b;
 }
 
-/* Dark Mode - Requested Palette (Refined) */
+/* ── Dark Mode: Automatic OS-level detection via @media query ── */
+/* This activates when the user's operating system is set to dark mode (e.g., Windows dark theme, macOS dark mode) */
+/* The :not(.light) selector ensures this does NOT apply if the user manually chose light mode via the ThemeToggle */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
+    /* --bg-primary: deepest background — Slate 950, a premium near-black for immersive dark mode */
     --bg-primary: #020617; /* Slate 950 - Deep & Premium */
+    /* --bg-secondary: card/panel surfaces — Slate 900, slightly lighter than page for depth */
     --bg-secondary: #0f172a; /* Slate 900 */
+    /* --bg-tertiary: elevated surfaces, hover states — Slate 800 for layered contrast */
     --bg-tertiary: #1e293b; /* Slate 800 */
 
+    /* --text-primary: main text — Slate 100, near-white for high readability on dark backgrounds */
     --text-primary: #f1f5f9; /* Slate 100 */
+    /* --text-secondary: supporting text — Slate 300, slightly dimmer for visual hierarchy */
     --text-secondary: #cbd5e1; /* Slate 300 */
+    /* --text-muted: de-emphasized text — Slate 400, notably dimmer but still readable */
     --text-muted: #94a3b8; /* Slate 400 */
 
+    /* --accent-primary: brand accent — Teal 500, slightly brighter than light mode for visibility on dark bg */
     --accent-primary: #14b8a6; /* Teal 500 - Slightly brighter for dark mode */
+    /* --accent-hover: hover/active state — Teal 400, brighter shade for interactive feedback */
     --accent-hover: #2dd4bf; /* Teal 400 */
+    /* --accent-light: subtle accent background — Teal 900, very dark teal for highlighted areas */
     --accent-light: #134e4a; /* Teal 900 */
 
+    /* --border-color: dividers and card borders — Slate 700, visible but subtle on dark surfaces */
     --border-color: #334155; /* Slate 700 */
+    /* --border-focus: focus ring color for inputs — matches accent teal for consistency */
     --border-focus: #14b8a6;
 
+    /* Glass morphism overrides for dark mode — darker, more opaque backdrop */
     --glass-bg: rgba(15, 23, 42, 0.95);
     --glass-border: rgba(51, 65, 85, 0.5);
 
+    /* Legacy color aliases updated for dark mode palette */
     --color-deep-space: var(--bg-primary);
     --color-plasma-cyan: #14b8a6;
     --color-nebula-blue: #020617;
@@ -70,62 +118,84 @@
   }
 }
 
-/* Manual light/dark mode class overrides */
+/* ── Manual Light Mode Override (via .light class on <html>) ── */
+/* Applied when the user explicitly selects light mode using the ThemeToggle button */
+/* This overrides both the default :root values AND any @media dark mode detection */
+/* The .light class is added to <html> by the theme detection script in index.html or by ThemeToggle */
 :root.light {
+  /* Background colors — identical to default :root since default IS light mode */
   --bg-primary: #f1f5f9;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #e2e8f0;
 
+  /* Text colors — dark text on light backgrounds for readability */
   --text-primary: #1e293b;
   --text-secondary: #334155;
   --text-muted: #64748b;
 
+  /* Accent colors — professional teal for interactive elements */
   --accent-primary: #0d9488;
   --accent-hover: #0f766e;
   --accent-light: #f0fdfa;
 
+  /* Border colors — light gray for subtle separation */
   --border-color: #cbd5e1;
   --border-focus: #0d9488;
 
+  /* Glass effect — light, semi-transparent white */
   --glass-bg: rgba(248, 250, 252, 0.95);
   --glass-border: rgba(226, 232, 240, 0.6);
 
+  /* Legacy aliases for light mode */
   --color-deep-space: var(--bg-primary);
   --color-plasma-cyan: #0d9488;
   --color-nebula-blue: #1e293b;
   --color-cosmic-dust: #1e293b;
 }
 
+/* ── Manual Dark Mode Override (via .dark class on <html>) ── */
+/* Applied when the user explicitly selects dark mode using the ThemeToggle button */
+/* This class takes precedence over both default :root values and @media queries */
+/* The .dark class is added to <html> by the theme detection script or by ThemeToggle component */
 :root.dark {
+  /* Background colors — deep navy/slate tones for a premium dark UI */
   --bg-primary: #020617;
   --bg-secondary: #0f172a;
   --bg-tertiary: #1e293b;
 
+  /* Text colors — light text on dark backgrounds */
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
 
+  /* Accent colors — slightly brighter teal for dark mode visibility */
   --accent-primary: #14b8a6;
   --accent-hover: #2dd4bf;
   --accent-light: #134e4a;
 
+  /* Border colors — dark slate for subtle separation */
   --border-color: #334155;
   --border-focus: #14b8a6;
 
+  /* Alert/error state colors (dark mode specific) — rose/red on very dark red background */
   --alert-bg: #4c0519;
   --alert-text: #fb7185;
   --alert-border: #881337;
 
+  /* Verification/warning state colors — amber on dark brown background */
   --verify-bg: #451a03;
   --verify-text: #fbbf24;
   --verify-border: #78350f;
 
+  /* Success state colors — emerald green on very dark green background */
   --success-bg: #022c22;
   --success-text: #34d399;
 
+  /* Glass morphism — dark, semi-transparent backdrop */
   --glass-bg: rgba(15, 23, 42, 0.95);
   --glass-border: rgba(51, 65, 85, 0.5);
 
+  /* Legacy aliases for dark mode */
   --color-deep-space: var(--bg-primary);
   --color-plasma-cyan: #14b8a6;
   --color-nebula-blue: #020617;
@@ -136,13 +206,20 @@
    LIGHT MODE: COMPREHENSIVE OVERRIDES
    Fix visibility, contrast, and design in light mode
    ============================================ */
+/* Problem: many Tailwind utility classes use white/light colors designed for dark backgrounds */
+/* In light mode, these become invisible or create very low contrast against the light page background */
+/* The overrides below remap those utilities to appropriate light-mode equivalents */
+/* !important is necessary to override Tailwind's utility-generated specificity */
 
-/* --- Text Colors --- */
-/* Override text-white except inside black backgrounds (overlays) */
+/* ─── Text Colors ─── */
+/* In dark mode, text-white is the standard text color; in light mode it becomes invisible on white/light bg */
+/* Override text-white globally to use dark text, except inside containers that intentionally have dark backgrounds */
 :root.light .text-white {
   color: var(--text-primary) !important;
 }
-/* Preserve white text inside intentionally dark containers */
+/* EXCEPTION: preserve white text inside containers that have explicitly dark backgrounds */
+/* These selectors match .bg-black, .bg-black/*, .bg-red-500, .bg-amber-600 containers */
+/* Without these exceptions, white text in modals, alerts, and error banners would become dark and unreadable */
 :root.light .bg-black .text-white,
 :root.light .bg-black.text-white,
 :root.light [class*="bg-black/"] .text-white,
@@ -152,48 +229,62 @@
 :root.light .bg-amber-600 .text-white {
   color: #ffffff !important;
 }
-/* White text on accent backgrounds stays white */
+/* Also preserve white text on accent-colored (teal) backgrounds where white text provides good contrast */
+/* [class*="bg-\[var(--accent"] matches dynamic CSS variable backgrounds like bg-[var(--accent-primary)] */
 :root.light [class*="bg-\[var(--accent"] .text-white,
 :root.light [class*="bg-\[var(--color-plasma"] .text-white {
   color: #ffffff !important;
 }
+/* Remap dark-mode-oriented gray text shades to readable light-mode equivalents */
+/* text-gray-100/200 are near-white in Tailwind — remap to dark primary text for light mode visibility */
 :root.light .text-gray-100,
 :root.light .text-gray-200 {
   color: var(--text-primary) !important;
 }
+/* text-gray-300: light gray → secondary text color for adequate contrast on light backgrounds */
 :root.light .text-gray-300 {
   color: var(--text-secondary) !important;
 }
+/* text-gray-400: medium gray → muted text variable for de-emphasized content */
 :root.light .text-gray-400 {
   color: var(--text-muted) !important;
 }
+/* text-gray-500: default muted is too light in light mode → Slate 600 for better contrast ratio */
 :root.light .text-gray-500 {
   color: #475569 !important; /* Slate 600 — better contrast than default muted */
 }
+/* text-gray-600: map to the same Slate 600 for consistent visual hierarchy */
 :root.light .text-gray-600 {
   color: #475569 !important;
 }
+/* text-blue-200: very light blue, nearly invisible in light mode — remap to muted text */
 :root.light .text-blue-200 {
   color: var(--text-muted) !important;
 }
+/* text-indigo-300: pastel indigo too light for light backgrounds — use Indigo 600 for sufficient contrast */
 :root.light .text-indigo-300 {
   color: #4f46e5 !important; /* Indigo 600 */
 }
-/* Hover text overrides */
+/* Override hover-state text that targets white (would be invisible on light hover backgrounds) */
+/* group-hover\:text-white: triggered when a parent .group element is hovered */
 :root.light .group-hover\:text-white:is(:where(.group):hover *) {
   color: var(--text-primary) !important;
 }
+/* hover\:text-white: direct hover → white text, override to dark text for light mode visibility */
 :root.light .hover\:text-white:hover {
   color: var(--text-primary) !important;
 }
 
-/* White opacity text */
+/* ─── White Opacity Text ─── */
+/* text-white/60, /70, /80 are white text with reduced opacity — nearly invisible on light backgrounds */
+/* Remap all of them to the secondary text color which provides good contrast in light mode */
 :root.light .text-white\/60,
 :root.light .text-white\/70,
 :root.light .text-white\/80 {
   color: var(--text-secondary) !important;
 }
-/* Preserve white opacity text in dark containers */
+/* EXCEPTION: preserve original white-opacity text inside intentionally dark containers */
+/* This keeps text readable in dark overlays, fullscreen modals, and similar dark-background elements */
 :root.light .bg-black .text-white\/60,
 :root.light .bg-black .text-white\/70,
 :root.light .bg-black .text-white\/80,
@@ -203,7 +294,9 @@
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* --- Background Colors (White Opacity → Tertiary) --- */
+/* ─── Background Colors: White Opacity → Tertiary ─── */
+/* In dark mode, bg-white/5, /10, /20 create subtle white overlays adding depth on dark surfaces */
+/* In light mode, white-on-white is invisible — remap to bg-tertiary (Slate 200) for visible distinction */
 :root.light .bg-white\/5 {
   background-color: var(--bg-tertiary) !important;
 }
@@ -213,13 +306,15 @@
 :root.light .bg-white\/20 {
   background-color: var(--bg-tertiary) !important;
 }
+/* Hover states: use Slate 300 for visible hover feedback on light backgrounds */
 :root.light .hover\:bg-white\/10:hover {
   background-color: #cbd5e1 !important; /* Slate 300 */
 }
 :root.light .hover\:bg-white\/20:hover {
   background-color: #cbd5e1 !important;
 }
-/* Preserve white-opacity bg inside dark containers (modal overlays) */
+/* EXCEPTION: preserve actual white-opacity backgrounds inside dark containers (modal overlay content) */
+/* Without this, subtle layering inside dark overlays would be lost */
 :root.light .bg-black .bg-white\/5,
 :root.light [class*="bg-black/"] .bg-white\/5 {
   background-color: rgba(255, 255, 255, 0.05) !important;
@@ -229,7 +324,11 @@
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* --- Background Colors (Black Opacity → Theme-aware) --- */
+/* ─── Background Colors: Black Opacity → Theme-Aware ─── */
+/* In dark mode, bg-black/20..90 creates depth layers and overlay scrims on dark surfaces */
+/* In light mode, pure black backgrounds look harsh and out-of-place on a light UI */
+/* Lower opacities (20-60): replace with theme background colors for consistent light design */
+/* Higher opacities (70-90): keep some actual darkness because they're used for modal scrims/overlays */
 :root.light .bg-black\/20 {
   background-color: var(--bg-primary) !important;
 }
@@ -245,6 +344,7 @@
 :root.light .bg-black\/60 {
   background-color: var(--bg-tertiary) !important;
 }
+/* bg-black/70..90 are used for actual overlay scrims — preserve darkness with slight adjustments */
 :root.light .bg-black\/70 {
   background-color: rgba(0, 0, 0, 0.5) !important;
 }
@@ -254,6 +354,7 @@
 :root.light .bg-black\/90 {
   background-color: rgba(0, 0, 0, 0.7) !important;
 }
+/* Hover states: use tertiary bg for a subtle, theme-consistent hover effect */
 :root.light .hover\:bg-black\/80:hover {
   background-color: var(--bg-tertiary) !important;
 }
@@ -261,7 +362,9 @@
   background-color: var(--bg-tertiary) !important;
 }
 
-/* --- Gray backgrounds (AdUnit etc.) --- */
+/* ─── Gray Background Overrides (AdUnit and similar dark-themed components) ─── */
+/* Dark gray backgrounds (gray-700/800/900) are designed for dark mode panels */
+/* In light mode, remap to lighter equivalents for visual consistency with the light theme */
 :root.light .bg-gray-900 {
   background-color: var(--bg-tertiary) !important;
 }
@@ -269,15 +372,19 @@
   background-color: var(--bg-tertiary) !important;
 }
 :root.light .bg-gray-700 {
-  background-color: #cbd5e1 !important; /* Slate 300 */
+  background-color: #cbd5e1 !important; /* Slate 300 — lighter gray for light mode */
 }
 
-/* --- Indigo adjustments --- */
+/* ─── Indigo Background Adjustments ─── */
+/* bg-indigo-900/10 is dark indigo at 10% opacity — barely visible in light mode */
+/* Replace with Indigo 50 (#eef2ff) for a clearly visible soft indigo tint */
 :root.light .bg-indigo-900\/10 {
   background-color: #eef2ff !important; /* Indigo 50 */
 }
 
-/* --- Border Colors (White/Black Opacity → Theme borders) --- */
+/* ─── Border Colors: White/Black Opacity → Theme Borders ─── */
+/* White-opacity borders (border-white/5, /10, /20) are invisible on light backgrounds */
+/* Remap them all to the standard theme border color (Slate 300) for visible card edges and dividers */
 :root.light .border-white\/5 {
   border-color: var(--border-color) !important;
 }
@@ -287,18 +394,24 @@
 :root.light .border-white\/20 {
   border-color: var(--border-color) !important;
 }
-/* Preserve borders in dark containers */
+/* EXCEPTION: preserve white-opacity borders inside intentionally dark containers */
+/* Modal overlays and dark panels need their original subtle white borders for depth */
 :root.light .bg-black .border-white\/20,
 :root.light [class*="bg-black/"] .border-white\/20 {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* --- Dividers --- */
+/* ─── Dividers ─── */
+/* Tailwind's divide-white/5 creates hairline dividers between child elements using border-color */
+/* In light mode, white dividers are invisible — use the theme border color instead */
 :root.light .divide-white\/5 > * + * {
   border-color: var(--border-color) !important;
 }
 
-/* --- Gradient Text Fix --- */
+/* ─── Gradient Text Fix ─── */
+/* Some headings use a white-to-gray gradient for text (via background-clip: text) */
+/* In light mode, white gradient text is invisible — remap to dark-primary-to-muted gradient */
+/* This preserves the gradient aesthetic while ensuring readability on light backgrounds */
 :root.light .bg-gradient-to-r.from-white.to-gray-400 {
   --tw-gradient-from: var(--text-primary) !important;
   --tw-gradient-to: var(--text-muted) !important;
@@ -309,7 +422,9 @@
   ) !important;
 }
 
-/* --- Preserve white text on colored backgrounds --- */
+/* ─── Preserve White Text on Colored (Non-Light) Backgrounds ─── */
+/* Red and amber backgrounds are dark enough that white text is correct and readable */
+/* This rule ensures the global text-white override above doesn't break these specific cases */
 :root.light .bg-red-500 .text-white,
 :root.light .bg-red-500.text-white,
 :root.light .bg-amber-600 .text-white,
@@ -317,81 +432,110 @@
   color: #ffffff !important;
 }
 
-/* --- Specific: implode/wipe animation stays dark --- */
+/* ─── Animation-Specific: Keep White Text During Implode/Wipe Transitions ─── */
+/* The implode animation plays on a black full-screen overlay — text must stay white */
+/* Also preserve white text in full-screen black containers (h-screen) used during transitions */
 :root.light .animate-implode ~ * .text-white,
 :root.light [class*="bg-black"].h-screen .text-white {
   color: #ffffff !important;
 }
 
-/* --- Glass panel in light mode: better shadow and border --- */
+/* ─── Glass Panel: Enhanced Light Mode Styling ─── */
+/* In dark mode, glass panels use backdrop-filter blur with semi-transparent dark backgrounds */
+/* In light mode, replace with a clean white card aesthetic with subtle borders and shadow */
+/* This looks more natural and professional against the light Slate 100 page background */
 :root.light .glass-panel {
+  /* Solid white background instead of semi-transparent blur */
   background: #ffffff;
+  /* Visible Slate 300 border for clear card edge definition */
   border: 1px solid #cbd5e1;
+  /* Subtle dual-layer shadow for depth: small tight shadow + larger diffused shadow */
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.05);
 }
+/* Glass panel hover effect: more pronounced shadow to indicate interactivity */
 :root.light .glass-panel-hover:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* --- Light mode shadow glow replacement --- */
+/* ─── Shadow/Glow Removal for Light Mode ─── */
+/* Text glow effects (text-shadow with bright colors) look garish on light backgrounds */
+/* Remove them entirely in light mode for a clean, professional appearance */
 :root.light .text-glow {
   text-shadow: none;
 }
 
-/* --- Light mode pulse-glow is too flashy --- */
+/* The pulse-glow animation (box-shadow pulsing) is too flashy and distracting in light mode */
+/* Replace the animation with a static, subtle glow shadow for a calmer visual */
 :root.light .animate-pulse-glow {
   animation: none;
   box-shadow: 0 0 10px -5px var(--accent-primary);
 }
 
-/* --- Background radial gradients for dark-only ambience --- */
+/* ─── Background Radial Gradients: Reduce Intensity ─── */
+/* Radial gradient backgrounds create atmospheric dark-mode ambience (glowing orbs, nebula effects) */
+/* In light mode, they look out of place and too dark — reduce to 15% opacity for a subtle hint */
 :root.light [class*="bg-\[radial-gradient"] {
   opacity: 0.15 !important;
 }
 
-/* --- Functional color contrast fixes --- */
+/* ─── Functional Color Contrast Fixes ─── */
+/* Tailwind's 400-level colors (green-400, red-400, orange-300/400) are designed for dark backgrounds */
+/* For light mode, use darker equivalents that meet WCAG AA contrast ratio requirements */
+/* Green-400 (→ Emerald 600): for positive/success indicators like confirmed values */
 :root.light .text-green-400 {
   color: #059669 !important;
 }
 :root.light .text-green-400\/70 {
   color: #059669 !important;
 }
+/* Red-400 (→ Red 600): for error/danger indicators like validation failures */
 :root.light .text-red-400 {
   color: #dc2626 !important;
 }
 :root.light .text-red-400\/70 {
   color: #dc2626 !important;
 }
+/* Orange-300 (→ Orange 700): for warning indicators that need darker contrast */
 :root.light .text-orange-300 {
   color: #c2410c !important;
 }
+/* Orange-400 (→ Orange 600): for slightly less severe warnings */
 :root.light .text-orange-400 {
   color: #ea580c !important;
 }
 
-/* --- Inputs: visible borders and placeholders in light mode --- */
+/* ─── Input Fields: Visible Borders and Placeholders in Light Mode ─── */
+/* Transparent-background inputs with no visible border are common in dark mode design */
+/* In light mode, they appear as bare text with no visual input field indication */
+/* Add subtle bottom borders when not focused, and accent-colored borders when focused */
 :root.light input.bg-transparent:not(:focus),
 :root.light select.bg-transparent:not(:focus) {
   border-color: var(--border-color) !important;
 }
+/* Ensure all transparent inputs have a visible bottom border line (underline style input) */
 :root.light input.bg-transparent,
 :root.light select.bg-transparent {
   border-bottom-width: 1px !important;
   border-bottom-style: solid !important;
 }
+/* On focus, change the bottom border to the accent teal color for clear focus indication */
 :root.light input.bg-transparent:focus,
 :root.light select.bg-transparent:focus {
   border-bottom-color: var(--accent-primary) !important;
 }
+/* Make placeholder text more visible in light mode using the muted text color at 70% opacity */
 :root.light input::placeholder,
 :root.light textarea::placeholder {
   color: var(--text-muted) !important;
   opacity: 0.7 !important;
 }
 
-/* --- Modal overlays: preserve dark backdrop text --- */
+/* ─── Modal Overlays: Fix Text Colors Inside Full-Screen Modals ─── */
+/* Modals use .fixed.inset-0 to create full-screen overlays with glass-panel or deep-space backgrounds */
+/* Text inside these modals should use theme-aware colors, not the preserved white from dark containers */
+/* Override text-white and text-gray-300 inside modal glass panels to use light mode text colors */
 :root.light .fixed.inset-0 .glass-panel .text-white,
 :root.light .fixed.inset-0 .bg-\[var\(--color-deep-space\)\] .text-white {
   color: var(--text-primary) !important;
@@ -401,53 +545,90 @@
   color: var(--text-secondary) !important;
 }
 
+/* ─── @theme: Tailwind CSS v4 Theme Configuration Block ─── */
+/* This section extends Tailwind's default theme with custom design tokens */
+/* Variables defined here become available as Tailwind utility classes (e.g., bg-deep-navy, text-coral-alert) */
+/* Keyframe animations defined here are automatically registered for use with animate-* utilities */
 @theme {
-  /* Brand Colors - Static */
+  /* ── Brand Colors (Static, Non-Theme-Dependent) ── */
+  /* These colors remain constant regardless of light/dark mode */
+  /* They're used for specific branding elements and semantic color roles */
+
+  /* Deep navy: used for specific branded sections (Slate 900) */
   --color-deep-navy: #0f172a;
+  /* Teal breeze: the brand's primary accent color in static contexts (Teal 600) */
   --color-teal-breeze: #0d9488; /* Updated to Teal 600 */
+  /* Gray neutral: lightest neutral for backgrounds and whitespace (Slate 50) */
   --color-gray-neutral: #f8fafc;
+  /* Coral alert: vibrant pink-red for error states and critical alerts (Rose 400) */
   --color-coral-alert: #fb7185;
+  /* Gold verify: warm amber for verification badges and pending states (Amber 400) */
   --color-gold-verify: #fbbf24;
+  /* Pure white: explicitly named for clarity in Tailwind class usage */
   --color-white: #ffffff;
 
-  /* Legacy support */
+  /* ── Legacy Color Support ── */
+  /* Older variable names still referenced by existing page components */
+  /* Mapping them here ensures backward compatibility without code refactoring */
   --color-nebula-blue: #020617;
   --color-cosmic-dust: #020617;
   --color-plasma-cyan: #0d9488;
 
+  /* ── Border Radius Token ── */
+  /* Default border radius for cards, panels, and buttons (12px for a modern rounded look) */
   --radius-default: 12px; /* Increased radius */
 
+  /* ── Animation Definitions ── */
+  /* These define named animations available via Tailwind's animate-* utility classes */
+
+  /* Float animation: gentle vertical bobbing effect for decorative elements (8-second cycle) */
   --animate-float: float 8s ease-in-out infinite; /* Slower float */
+  /* Pulse glow animation: subtle pulsing box-shadow effect for call-to-action elements (4-second cycle) */
   --animate-pulse-glow: pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; /* Slower pulse */
 
+  /* @keyframes float: defines the vertical translation for the floating animation */
+  /* Elements move up 8px and back down in a smooth sinusoidal motion */
   @keyframes float {
     0%,
     100% {
-      transform: translateY(0px);
+      transform: translateY(0px); /* Start and end at natural position */
     }
     50% {
-      transform: translateY(-8px); /* Reduced movement */
+      transform: translateY(
+        -8px
+      ); /* Reduced movement — subtle, non-distracting */
     }
   }
 
+  /* @keyframes pulse-glow: defines the box-shadow pulsing for attention-drawing elements */
+  /* Alternates between a stronger and weaker glow using the accent color */
   @keyframes pulse-glow {
     0%,
     100% {
-      opacity: 1;
-      box-shadow: 0 0 15px -5px var(--accent-primary); /* Reduced glow */
+      opacity: 1; /* Full opacity at start and end */
+      box-shadow: 0 0 15px -5px var(--accent-primary); /* Reduced glow — not too flashy */
     }
     50% {
-      opacity: 0.9;
-      box-shadow: 0 0 5px -5px var(--accent-primary);
+      opacity: 0.9; /* Slight opacity reduction at midpoint for pulsing effect */
+      box-shadow: 0 0 5px -5px var(--accent-primary); /* Minimal glow at midpoint */
     }
   }
 }
 
+/* @layer base: Tailwind's base layer for global element styles and CSS resets */
+/* Rules here apply to raw HTML elements (no classes needed) and have the lowest specificity within Tailwind */
+/* This layer is ideal for typography defaults, focus styles, and normalizing browser inconsistencies */
 @layer base {
+  /* Universal reset: remove all default border-radius from every element */
+  /* This gives full control over border-radius via explicit Tailwind classes or custom CSS */
   * {
     border-radius: 0;
   }
 
+  /* Heading typography: apply the custom FS Rosa font to all heading levels (h1–h6) */
+  /* Fallback chain: system-ui (OS default sans-serif), then generic sans-serif */
+  /* font-weight 800 (extra-bold) makes headings visually prominent */
+  /* color uses the theme-aware text-primary CSS variable for automatic light/dark adaptation */
   h1,
   h2,
   h3,
@@ -459,70 +640,120 @@
     color: var(--text-primary);
   }
 
+  /* Monospaced typography: use FS Rosa for code blocks and monospace elements as well */
+  /* This maintains visual consistency (the same brand font) even in code-like contexts */
+  /* Falls back to the browser's default monospace font if FS Rosa doesn't load */
   code,
   pre,
   .font-mono {
     font-family: "FS Rosa", monospace;
   }
 
-  /* Ensure good focus visibility */
+  /* Focus visibility: ensure keyboard-focused elements have a clearly visible focus ring */
+  /* This is critical for accessibility (WCAG 2.4.7) — keyboard users need to see which element has focus */
+  /* Uses the accent-primary color (teal) for the outline, with 2px offset to avoid clipping content */
   :focus-visible {
     outline: 2px solid var(--accent-primary);
     outline-offset: 2px;
   }
 }
 
+/* @layer utilities: Tailwind's utilities layer for custom utility classes */
+/* Rules here have higher specificity than base and components layers */
+/* These classes can be used directly in JSX className attributes just like built-in Tailwind utilities */
 @layer utilities {
+  /* preserve-3d: enables 3D transform context for child elements */
+  /* Required when using CSS 3D transforms (rotateX, rotateY) on child elements */
+  /* Without this, child transforms would be flattened to 2D */
   .preserve-3d {
     transform-style: preserve-3d;
   }
 
-  /* Glass panel - adapts to theme */
+  /* Glass panel: a frosted-glass card component using CSS backdrop-filter */
+  /* Adapts to the active theme via CSS variables (--glass-bg, --glass-border) */
+  /* In light mode, these variables point to light semi-transparent whites */
+  /* In dark mode, they point to dark semi-transparent navies */
   .glass-panel {
+    /* Semi-transparent background color from theme variables */
     background: var(--glass-bg);
+    /* Gaussian blur of content behind the panel — creates the "frosted glass" effect */
     backdrop-filter: blur(12px);
+    /* Subtle border using theme-aware color for edge definition */
     border: 1px solid var(--glass-border);
+    /* Light shadow for depth and elevation perception */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    /* Rounded corners using the design system's default radius (12px) */
     border-radius: var(--radius-default);
   }
 
+  /* Glass panel hover state: smooth 300ms transition for all properties */
+  /* Applied separately so non-interactive glass panels don't get hover effects */
   .glass-panel-hover {
     transition: all 0.3s ease;
   }
+  /* On hover: highlight the border with the focus/accent color and increase shadow for lifted effect */
   .glass-panel-hover:hover {
     border-color: var(--border-focus);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
+/* ─── Global Body Styles ─── */
+/* These styles apply to the <body> element and define the base typography and appearance for the entire app */
 body {
+  /* Primary font: FS Rosa (custom brand font) with system-ui and sans-serif as fallbacks */
   font-family: "FS Rosa", system-ui, sans-serif;
+  /* Base weight: 400 (regular) for body text — headings override this to 800 via @layer base */
   font-weight: 400;
+  /* Base font size: 16px — the browser default, required for consistent rem calculations */
+  /* Also prevents iOS auto-zoom on input focus (which triggers when font-size < 16px) */
   font-size: 16px;
+  /* Page background color: uses the theme-aware CSS variable (light: Slate 100, dark: Slate 950) */
   background-color: var(--bg-primary);
+  /* Default text color: theme-aware (light: Slate 800, dark: Slate 100) for automatic contrast */
   color: var(--text-primary);
+  /* Prevent horizontal scrollbar from appearing when elements slightly overflow (e.g., floating buttons) */
   overflow-x: hidden;
+  /* Line height 1.6: generous spacing between text lines for improved readability */
   line-height: 1.6;
+  /* Smooth transition when switching themes: background and text colors animate over 300ms */
+  /* This prevents a jarring instant color change when the user toggles the ThemeToggle button */
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+  /* Remove the default gray tap highlight that iOS/Android shows when tapping interactive elements */
+  /* The app provides its own visual feedback via hover/active states */
   -webkit-tap-highlight-color: transparent;
+  /* Prevent mobile Safari from auto-adjusting text sizes when the device orientation changes */
+  /* 100% means keep the original size — layout is responsive via CSS, not text inflation */
   -webkit-text-size-adjust: 100%;
 }
 
-/* FS Rosa renders smaller than Inter — bump up small text sizes globally */
+/* ─── Font Size Compensation for FS Rosa ─── */
+/* FS Rosa renders visually smaller than standard fonts like Inter at the same pixel size */
+/* These overrides bump up Tailwind's small text utility classes so text remains readable */
+/* Without these, text-xs and text-sm would be too small to read comfortably with FS Rosa */
+
+/* text-[10px]: ultra-small text (used sparingly for legal fine print, etc.) */
+/* Bumped from 10px to 12px (0.75rem) to ensure minimum readability with FS Rosa */
 [class*="text-\[10px\]"] {
   font-size: 0.75rem !important; /* 12px instead of 10px */
   line-height: 1.4 !important;
 }
+/* text-xs: extra-small text (captions, badges, timestamps) */
+/* Bumped from 12px to 13.6px (0.85rem) for readability */
 .text-xs {
   font-size: 0.85rem !important; /* 13.6px instead of 12px */
   line-height: 1.4 !important;
 }
+/* text-sm: small text (secondary labels, help text, table cells) */
+/* Bumped from 14px to 15.2px (0.95rem) — close to base size for comfortable reading */
 .text-sm {
   font-size: 0.95rem !important; /* 15.2px instead of 14px */
   line-height: 1.5 !important;
 }
+/* text-base: base/normal text size */
+/* Bumped from 16px to 16.8px (1.05rem) for slightly larger FS Rosa rendering */
 .text-base {
   font-size: 1.05rem !important; /* 16.8px instead of 16px */
 }
@@ -530,25 +761,44 @@ body {
 /* ============================================
    PWA & MOBILE OPTIMISATIONS
    ============================================ */
+/* This section ensures the app works well as a Progressive Web App (PWA) and on mobile devices */
+/* It handles safe areas for notched phones, touch targets, zoom prevention, and scrolling behavior */
 
-/* Safe-area insets for notched devices */
+/* ─── Safe Area Insets for Notched Devices ─── */
+/* Modern phones (iPhone X+, some Android) have notches, rounded corners, and home indicator bars */
+/* env(safe-area-inset-*) provides the OS-reported safe area dimensions */
+/* Applying these as padding on #root ensures no content is hidden behind hardware obstructions */
 #root {
+  /* Padding for the top notch / dynamic island area */
   padding-top: env(safe-area-inset-top);
+  /* Padding for the bottom home indicator bar on notched iPhones */
   padding-bottom: env(safe-area-inset-bottom);
+  /* Left safe area (relevant for landscape orientation on notched devices) */
   padding-left: env(safe-area-inset-left);
+  /* Right safe area (relevant for landscape orientation on notched devices) */
   padding-right: env(safe-area-inset-right);
+  /* min-height: 100dvh uses the dynamic viewport height unit */
+  /* Unlike 100vh, dvh accounts for the mobile browser's appearing/disappearing address bar */
+  /* This ensures the app always fills the visible area without content being hidden behind the toolbar */
   min-height: 100dvh;
 }
 
-/* Standalone PWA adjustments */
+/* ─── Standalone PWA Adjustments ─── */
+/* These rules only apply when the app is installed and running in standalone mode (added to home screen) */
+/* display-mode: standalone means the browser chrome (address bar, tabs) is hidden */
 @media (display-mode: standalone) {
   body {
+    /* Disable rubber-band overscroll effect — prevents the "pull down to refresh" gesture */
+    /* This makes the app feel more like a native app rather than a website */
     overscroll-behavior-y: none;
+    /* Disable text selection globally in standalone mode for a native-app feel */
+    /* Users don't expect to select text in a native app the way they do on a website */
     user-select: none;
-    -webkit-user-select: none;
+    -webkit-user-select: none; /* Safari/WebKit prefix required for iOS support */
   }
 
-  /* Allow text selection in inputs and textareas */
+  /* EXCEPTION: re-enable text selection in form inputs, textareas, and editable elements */
+  /* Users DO need to select, copy, and paste text within input fields */
   input,
   textarea,
   [contenteditable] {
@@ -557,7 +807,10 @@ body {
   }
 }
 
-/* Prevent iOS zoom on input focus (requires font-size >= 16px) */
+/* ─── Prevent iOS Auto-Zoom on Input Focus ─── */
+/* iOS Safari automatically zooms in when a user taps an input with font-size < 16px */
+/* This is a well-known iOS behavior that disrupts the layout and confuses users */
+/* Force all input types to 16px on mobile screens to prevent this unwanted zoom behavior */
 @media screen and (max-width: 768px) {
   input[type="text"],
   input[type="number"],
@@ -572,17 +825,24 @@ body {
   }
 }
 
-/* Date picker icon white in dark mode */
+/* ─── Date Picker Icon: Dark Mode Inversion ─── */
+/* The native date picker calendar icon is dark by default (designed for light backgrounds) */
+/* In dark mode, a dark icon on a dark background is invisible — invert it to white */
+/* Two selectors handle both manual .dark class and OS-level dark mode preference */
 :root.dark input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  filter: invert(1); /* Invert colors: dark icon becomes white */
 }
+/* OS-level dark mode detection: apply the same inversion unless user manually chose light mode */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
   }
 }
 
-/* Touch-friendly minimum tap targets */
+/* ─── Touch-Friendly Minimum Tap Targets ─── */
+/* WCAG 2.5.8 and Apple HIG recommend minimum 44x44px touch targets for accessibility */
+/* pointer: coarse detects touchscreen devices (vs. pointer: fine for mouse/trackpad) */
+/* This ensures buttons, links, and form controls are large enough to tap accurately with fingers */
 @media (pointer: coarse) {
   button,
   a,
@@ -590,33 +850,41 @@ body {
   input[type="checkbox"],
   input[type="radio"],
   select {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 44px; /* Minimum 44px height for comfortable finger tapping */
+    min-width: 44px; /* Minimum 44px width to prevent accidental mis-taps */
   }
 
-  /* Compact buttons keep their size */
+  /* Exception: buttons with .btn-compact class are intentionally small (icon buttons, inline actions) */
+  /* Reset the minimum dimensions so they can maintain their designed compact size */
   .btn-compact {
     min-height: unset;
     min-width: unset;
   }
 }
 
-/* Hide scrollbar utility */
+/* ─── Hide Scrollbar Utility ─── */
+/* Hides the scrollbar while keeping the content scrollable (used for horizontal scroll areas) */
+/* Cross-browser implementation: IE/Edge, Firefox, and WebKit/Blink (Chrome, Safari) */
 .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge: hide the scrollbar */
+  scrollbar-width: none; /* Firefox: hide the scrollbar */
 }
+/* WebKit/Blink (Chrome, Safari, newer Edge): hide the scrollbar pseudo-element */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* Mobile-specific layout helpers */
+/* ─── Mobile-Specific Layout Helpers ─── */
+/* Adjustments for small screens (< 640px, typically phones in portrait mode) */
 @media screen and (max-width: 640px) {
+  /* Reduce glass-panel border radius on mobile for a slightly tighter, compact appearance */
+  /* 8px instead of 12px to save horizontal space on small screens */
   .glass-panel {
     border-radius: 8px;
   }
 
-  /* Smaller checkboxes on mobile */
+  /* Smaller checkboxes on mobile — 12px instead of default (which may be 44px due to touch target rules) */
+  /* Checkboxes in dense forms need to be compact to not break the layout */
   input[type="checkbox"] {
     width: 12px !important;
     height: 12px !important;
@@ -625,13 +893,18 @@ body {
   }
 }
 
-/* Improve touch scrolling */
+/* ─── Improve Touch Scrolling ─── */
+/* -webkit-overflow-scrolling: touch enables momentum/inertial scrolling on iOS */
+/* Without this, scroll areas may feel sluggish on older iOS versions */
 .touch-scroll {
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
 }
 
-/* Pull-to-refresh prevention in standalone */
+/* ─── Pull-to-Refresh Prevention in Standalone PWA Mode ─── */
+/* When the app is installed as a PWA, disable the browser's pull-to-refresh gesture */
+/* overscroll-behavior: none prevents the overscroll glow and the pull-to-refresh action */
+/* Applied to <html> to catch overscroll at the document level */
 @media (display-mode: standalone) {
   html {
     overscroll-behavior: none;
@@ -641,63 +914,90 @@ body {
 /* ============================================
    ANIMATIONS
    ============================================ */
+/* Custom CSS keyframe animations used throughout the application */
+/* These are applied via utility classes (.animate-fade-in, .animate-bounce-in, .animate-implode) */
+/* Also includes guided tour-specific animations for the interactive tutorial overlay system */
 
+/* @keyframes fadeIn: gentle entrance animation for page elements */
+/* Animates from slightly below (8px) and transparent to the natural position and full opacity */
+/* Used for staggered card reveals, form field appearances, and section transitions */
 @keyframes fadeIn {
   from {
-    opacity: 0;
-    transform: translateY(8px);
+    opacity: 0; /* Start fully transparent */
+    transform: translateY(8px); /* Start 8px below the final position */
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1; /* End fully visible */
+    transform: translateY(0); /* End at the natural position */
   }
 }
 
+/* @keyframes bounceIn: playful entrance with an overshoot bounce effect */
+/* Element scales up from 80% and drops in from above, overshoots to 105%, then settles at 100% */
+/* Used for attention-grabbing elements like result cards or success notifications */
 @keyframes bounceIn {
   0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(-20px);
+    opacity: 0; /* Start transparent */
+    transform: scale(0.8) translateY(-20px); /* Start smaller and above */
   }
   60% {
-    opacity: 1;
-    transform: scale(1.05) translateY(0);
+    opacity: 1; /* Fully visible by 60% of the animation */
+    transform: scale(1.05) translateY(0); /* Overshoot: slightly larger than final size */
   }
   100% {
-    transform: scale(1) translateY(0);
+    transform: scale(1) translateY(0); /* Settle at natural size and position */
   }
 }
 
+/* @keyframes implode: dramatic exit animation for full-screen transitions */
+/* Element shrinks from full size to nothing (scale 0) while fading out */
+/* Used for the "wipe" transition between major app sections (e.g., disclaimer → main app) */
 @keyframes implode {
   0% {
-    transform: scale(1);
-    opacity: 1;
+    transform: scale(1); /* Start at full size */
+    opacity: 1; /* Start fully visible */
   }
   100% {
-    transform: scale(0);
-    opacity: 0;
+    transform: scale(0); /* Shrink to nothing (implode to center) */
+    opacity: 0; /* Fade out completely */
   }
 }
 
+/* Utility class: apply the fadeIn animation with 0.5s duration and ease-out timing */
+/* "both" fill-mode means the element retains the animation's start state before playing and end state after */
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out both;
 }
 
-/* ---- Guided Header Tour animations ---- */
+/* ──── Guided Header Tour Animations ──── */
+/* These animations power the interactive guided tour overlay system */
+/* The tour highlights UI elements step-by-step with backdrop dimming, focus rings, and tooltip popups */
+
+/* Backdrop: dims the rest of the page to draw attention to the highlighted element */
+/* Uses the same fadeIn animation but faster (0.3s) for responsive feel */
 .guided-tour-backdrop {
   animation: fadeIn 0.3s ease-out both;
 }
 
+/* Focus ring: a glowing teal ring drawn around the currently highlighted tour step element */
+/* Uses box-shadow to create a 3px ring with the accent color plus a soft outer glow */
+/* The guidedTourPulse animation makes the ring breathe/pulse to attract the user's eye */
 .guided-tour-ring {
   box-shadow:
     0 0 0 3px var(--accent-primary),
-    0 0 12px 4px rgba(20, 184, 166, 0.35);
-  animation: guidedTourPulse 1.8s ease-in-out infinite;
+    /* Inner: solid 3px teal ring */ 0 0 12px 4px rgba(20, 184, 166, 0.35); /* Outer: soft teal glow for depth */
+  animation: guidedTourPulse 1.8s ease-in-out infinite; /* Continuous pulsing effect */
 }
 
+/* Tooltip: the explanatory text bubble that appears near the highlighted element */
+/* Uses a custom spring-like cubic-bezier for a bouncy, natural-feeling slide-in */
 .guided-tour-tooltip {
   animation: guidedTourSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+/* @keyframes guidedTourPulse: animates the focus ring between two box-shadow intensities */
+/* At 0%/100%: normal 3px ring with moderate glow */
+/* At 50%: expanded 6px ring with stronger, wider glow — creates the "breathing" effect */
 @keyframes guidedTourPulse {
   0%,
   100% {
@@ -712,21 +1012,29 @@ body {
   }
 }
 
+/* @keyframes guidedTourSlideIn: tooltip entrance animation */
+/* Slides up from 8px below while scaling from 95% to 100% and fading in */
+/* The spring cubic-bezier (0.34, 1.56, 0.64, 1) creates a slight overshoot for a lively, natural feel */
 @keyframes guidedTourSlideIn {
   0% {
-    opacity: 0;
-    transform: translateY(8px) scale(0.95);
+    opacity: 0; /* Start hidden */
+    transform: translateY(8px) scale(0.95); /* Start below and slightly smaller */
   }
   100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    opacity: 1; /* End fully visible */
+    transform: translateY(0) scale(1); /* End at natural position and full size */
   }
 }
 
+/* Utility class: apply the bounceIn animation with 0.4s duration */
+/* Used for elements that should pop in with energy (result panels, achievement badges) */
 .animate-bounce-in {
   animation: bounceIn 0.4s ease-out both;
 }
 
+/* Utility class: apply the implode animation with 1.5s duration and ease-in timing */
+/* ease-in starts slow and accelerates — creates a dramatic "sucking in" effect */
+/* Used for the full-screen wipe transition between major sections of the app */
 .animate-implode {
   animation: implode 1.5s ease-in both;
 }
