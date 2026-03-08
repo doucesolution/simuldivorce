@@ -28,7 +28,12 @@ const InterstitialAdPage = lazy(() => import("./pages/InterstitialAdPage"));
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
   useEffect(() => {
+    // Scroll the window itself
     window.scrollTo(0, 0);
+    // Also reset any inner scrollable containers (overflow-y-auto divs)
+    document
+      .querySelectorAll<HTMLElement>('[class*="overflow-y"]')
+      .forEach((el) => el.scrollTo(0, 0));
   }, [pathname]);
   return null;
 };

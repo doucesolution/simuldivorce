@@ -129,12 +129,12 @@ const PrestationCompensatoirePage: React.FC = () => {
 
       {/* Header */}
       <div
-        className="bg-black/20 backdrop-blur-md border-b border-white/5 p-4 flex justify-between items-center sticky top-0 z-50"
+        className="sticky top-0 z-50 flex items-center justify-between p-4 border-b bg-black/20 backdrop-blur-md border-white/5"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 1rem)" }}
       >
         <button
           onClick={() => navigate(getPreviousPage(currentPath))}
-          className="p-2 rounded-full hover:bg-white/10 group flex items-center justify-center"
+          className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 group"
         >
           <ChevronLeft className="w-5 h-5 text-gray-400 group-hover:text-white" />
         </button>
@@ -143,7 +143,7 @@ const PrestationCompensatoirePage: React.FC = () => {
         </h1>
         <button
           onClick={() => navigate("/")}
-          className="p-2 rounded-full hover:bg-white/10 group flex items-center justify-center"
+          className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 group"
           title="Accueil"
         >
           <Home className="w-5 h-5 text-gray-400 group-hover:text-white" />
@@ -151,7 +151,7 @@ const PrestationCompensatoirePage: React.FC = () => {
       </div>
 
       {/* Progress + Subtitle */}
-      <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 z-10">
+      <div className="z-10 px-4 pt-4 pb-2 sm:px-6 sm:pt-6">
         <div className="flex justify-end mb-6">
           <div className="flex space-x-1">
             {Array.from({ length: totalPages }).map((_, i) => (
@@ -162,7 +162,7 @@ const PrestationCompensatoirePage: React.FC = () => {
             ))}
           </div>
         </div>
-        <h1 className="text-2xl font-bold text-white text-glow mb-2">
+        <h1 className="mb-2 text-2xl font-bold text-white text-glow">
           Prestation Compensatoire
         </h1>
         <p className="text-sm text-gray-400">
@@ -178,7 +178,7 @@ const PrestationCompensatoirePage: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-28 sm:pb-32 animate-fade-in relative z-10 scrollbar-hide space-y-8">
+      <div className="relative z-10 flex-1 px-4 space-y-8 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
         {/* ── Section 1: Mariage ── */}
         <GuidedStep
           step={stepIdx("mariage")}
@@ -193,13 +193,13 @@ const PrestationCompensatoirePage: React.FC = () => {
             {/* Category label */}
             <div className="flex items-center space-x-2">
               <Scale className="w-4 h-4 text-teal-400" />
-              <span className="text-xs uppercase tracking-widest text-teal-400 font-bold">
+              <span className="text-xs font-bold tracking-widest text-teal-400 uppercase">
                 Prestation Compensatoire — Mariage
               </span>
             </div>
 
             {/* Marriage Date */}
-            <div className="glass-panel p-6 rounded-2xl border border-white/10">
+            <div className="p-6 border glass-panel rounded-2xl border-white/10">
               <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                 <Calendar className="w-3 h-3" /> <span>Date de Mariage</span>
               </label>
@@ -213,7 +213,7 @@ const PrestationCompensatoirePage: React.FC = () => {
             </div>
 
             {/* Divorce Date */}
-            <div className="glass-panel p-6 rounded-2xl border border-white/10">
+            <div className="p-6 border glass-panel rounded-2xl border-white/10">
               <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                 <Calendar className="w-3 h-3" />{" "}
                 <span>Date de Divorce / Séparation</span>
@@ -259,13 +259,13 @@ const PrestationCompensatoirePage: React.FC = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-2">
                 <Scale className="w-4 h-4 text-teal-400" />
-                <span className="text-xs uppercase tracking-widest text-teal-400 font-bold">
+                <span className="text-xs font-bold tracking-widest text-teal-400 uppercase">
                   Prestation Compensatoire — Famille
                 </span>
               </div>
 
               {/* Children Count */}
-              <div className="glass-panel p-6 rounded-2xl border border-white/10">
+              <div className="p-6 border glass-panel rounded-2xl border-white/10">
                 <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                   <Users className="w-3 h-3" /> <span>Enfants</span>
                 </label>
@@ -297,12 +297,12 @@ const PrestationCompensatoirePage: React.FC = () => {
 
               {/* Children Ages */}
               {childrenCount > 0 && (
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <Users className="w-3 h-3" /> <span>Âge des Enfants</span>
                     <InfoTooltip content="L'âge de chaque enfant détermine les unités de consommation OCDE (< 14 ans = 0.3 UC, ≥ 14 ans = 0.5 UC) et influence le calcul de la prestation compensatoire." />
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {Array.from({ length: childrenCount }).map((_, i) => (
                       <div key={i} className="flex items-center space-x-3">
                         <span className="text-sm text-gray-400 shrink-0">
@@ -312,7 +312,8 @@ const PrestationCompensatoirePage: React.FC = () => {
                           type="number"
                           min="0"
                           max="30"
-                          value={childrenAges[i] ?? 0}
+                          placeholder="ex : 14"
+                          value={childrenAges[i] || ""}
                           onChange={(e) => {
                             const newAges = [...childrenAges];
                             newAges[i] = parseInt(e.target.value) || 0;
@@ -331,7 +332,7 @@ const PrestationCompensatoirePage: React.FC = () => {
 
               {/* Custody Type */}
               {childrenCount > 0 && (
-                <div className="glass-panel p-6 rounded-2xl border border-white/10">
+                <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <Users className="w-3 h-3" /> <span>Type de Garde</span>
                   </label>
@@ -376,7 +377,7 @@ const PrestationCompensatoirePage: React.FC = () => {
           >
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-500/10 shrink-0">
                   <AlertTriangle className="w-5 h-5 text-amber-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white">
@@ -388,19 +389,19 @@ const PrestationCompensatoirePage: React.FC = () => {
                   setShowDateModal(false);
                   setDateModalError("");
                 }}
-                className="text-gray-400 hover:text-white transition p-2 rounded-full hover:bg-white/10 cursor-pointer"
+                className="p-2 text-gray-400 transition rounded-full cursor-pointer hover:text-white hover:bg-white/10"
                 type="button"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-sm text-gray-300 leading-relaxed">
+              <p className="text-sm leading-relaxed text-gray-300">
                 {dateModalError ||
                   "Veuillez entrer votre date de mariage pour continuer la simulation."}
               </p>
               <div>
-                <label className="text-xs text-gray-400 mb-2 block">
+                <label className="block mb-2 text-xs text-gray-400">
                   Date de mariage
                 </label>
                 <input
@@ -419,7 +420,7 @@ const PrestationCompensatoirePage: React.FC = () => {
                 className="w-full bg-[var(--color-plasma-cyan)] hover:bg-[var(--accent-hover)] text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2 active:scale-95"
                 style={{ color: "#ffffff" }}
               >
-                <span className="tracking-widest text-sm uppercase">
+                <span className="text-sm tracking-widest uppercase">
                   Continuer
                 </span>
                 <ArrowRight className="w-4 h-4" />
@@ -448,11 +449,11 @@ const PrestationCompensatoirePage: React.FC = () => {
           className={`w-full max-w-md mx-auto bg-[var(--color-plasma-cyan)] hover:bg-[var(--accent-hover)] text-white font-bold py-3 sm:py-5 rounded-2xl shadow-[0_0_30px_rgba(34,211,238,0.3)] transition-all flex items-center justify-center space-x-2 sm:space-x-3 group active:scale-95 ${isGuided && !allDone ? "opacity-20 blur-[3px]" : ""}`}
           style={{ color: "#ffffff" }}
         >
-          <span className="text-xs sm:text-sm tracking-wider sm:tracking-widest uppercase">
+          <span className="text-xs tracking-wider uppercase sm:text-sm sm:tracking-widest">
             <span className="sm:hidden">Valider</span>
             <span className="hidden sm:inline">Valider et poursuivre</span>
           </span>
-          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-4 h-4 transition-transform sm:w-5 sm:h-5 group-hover:translate-x-1" />
         </button>
       </div>
       <GuidedHeaderTour />
