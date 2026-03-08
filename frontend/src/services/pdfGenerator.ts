@@ -7,6 +7,12 @@ const COLOR_PRIMARY = "#0F172A"; // Slate 900
 const COLOR_ACCENT = "#14B8A6"; // Teal 500
 const COLOR_MUTED = "#64748B"; // Slate 500
 
+/** Format a number with regular spaces as thousands separator (PDF-safe) */
+const fmtNum = (n: number): string => {
+  const str = Math.round(n).toString();
+  return str.replace(/\B(?=(?:\d{3})+(?!\d))/g, ' ');
+};
+
 export const pdfGenerator = {
   generateReport: async (
     data: FinancialData,
@@ -220,12 +226,12 @@ export const pdfGenerator = {
     if (needsNetIncome) {
       col2Y = textBold("Revenus & Charges Mensuelles", rightX, col2Y);
       col2Y = textMuted(
-        `• Revenu net (créancier) : ${data.myIncome.toLocaleString()} €`,
+        `• Revenu net (créancier) : ${fmtNum(data.myIncome)} €`,
         rightX,
         col2Y,
       );
       col2Y = textMuted(
-        `• Revenu net (débiteur) : ${data.spouseIncome.toLocaleString()} €`,
+        `• Revenu net (débiteur) : ${fmtNum(data.spouseIncome)} €`,
         rightX,
         col2Y,
       );
@@ -242,25 +248,25 @@ export const pdfGenerator = {
       const cGrossLabel =
         data.creditorIncomeMode === "annual" ? "/ an" : "/ mois";
       y = textMuted(
-        `• Revenu brut débiteur : ${(data.debtorGrossIncome || 0).toLocaleString()} € ${dGrossLabel}`,
+        `• Revenu brut débiteur : ${fmtNum(data.debtorGrossIncome || 0)} € ${dGrossLabel}`,
         leftX,
         y,
       );
       y = textMuted(
-        `• Revenu brut créancier : ${(data.creditorGrossIncome || 0).toLocaleString()} € ${cGrossLabel}`,
+        `• Revenu brut créancier : ${fmtNum(data.creditorGrossIncome || 0)} € ${cGrossLabel}`,
         leftX,
         y,
       );
       if (data.debtorPropertyValue) {
         y = textMuted(
-          `• Patrimoine débiteur : ${data.debtorPropertyValue.toLocaleString()} € (rendement ${data.debtorPropertyYield || 0}%)`,
+          `• Patrimoine débiteur : ${fmtNum(data.debtorPropertyValue)} € (rendement ${data.debtorPropertyYield || 0}%)`,
           leftX,
           y,
         );
       }
       if (data.creditorPropertyValue) {
         y = textMuted(
-          `• Patrimoine créancier : ${data.creditorPropertyValue.toLocaleString()} € (rendement ${data.creditorPropertyYield || 0}%)`,
+          `• Patrimoine créancier : ${fmtNum(data.creditorPropertyValue)} € (rendement ${data.creditorPropertyYield || 0}%)`,
           leftX,
           y,
         );
@@ -303,7 +309,7 @@ export const pdfGenerator = {
           detail: results.details.axelDepondt,
         });
 
-      const boxHeight = pcMethodEntries.length * 13 + 16; // 13 per entry + padding + average line
+      const boxHeight = pcMethodEntries.length * 8 + 16;
       doc.setFillColor(241, 245, 249);
       doc.roundedRect(20, y, pageWidth - 40, boxHeight, 3, 3, "F");
 
@@ -316,19 +322,10 @@ export const pdfGenerator = {
         doc.setTextColor(COLOR_PRIMARY);
         doc.text(entry.label, boxX, bY);
         doc.text(
-          `${entry.detail.value.toLocaleString()} €`,
+          `${fmtNum(entry.detail.value)} €`,
           pageWidth - 30,
           bY,
           { align: "right" },
-        );
-        bY += 5;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.setTextColor(COLOR_MUTED);
-        doc.text(
-          `Min: ${entry.detail.min.toLocaleString()} €   —   Max: ${entry.detail.max.toLocaleString()} €`,
-          boxX,
-          bY,
         );
         bY += 8;
       });
@@ -339,7 +336,7 @@ export const pdfGenerator = {
         doc.setFontSize(11);
         doc.setTextColor(COLOR_ACCENT);
         doc.text("Moyenne Estimée", boxX, bY);
-        doc.text(`${pcMainValue.toLocaleString()} €`, pageWidth - 30, bY, {
+        doc.text(`${fmtNum(pcMainValue)} €`, pageWidth - 30, bY, {
           align: "right",
         });
       }
@@ -357,12 +354,12 @@ export const pdfGenerator = {
           y,
         );
         y = textMuted(
-          `Revenu du payeur : ${payerIncome.toLocaleString()} € / mois`,
+          `Revenu du payeur : ${fmtNum(payerIncome)} € / mois`,
           30,
           y,
         );
         y = textMuted(
-          `Revenu du bénéficiaire : ${beneficiaryIncome.toLocaleString()} € / mois`,
+          `Revenu du bénéficiaire : ${fmtNum(beneficiaryIncome)} € / mois`,
           30,
           y,
         );
@@ -375,7 +372,7 @@ export const pdfGenerator = {
         y = checkPageBreak(y, 30);
         y = textBold("Méthode INSEE (Unités de Consommation)", 25, y, 9);
         y = textMuted(
-          `Revenus totaux du ménage : ${(data.myIncome + data.spouseIncome).toLocaleString()} € / mois`,
+          `Revenus totaux du ménage : ${fmtNum(data.myIncome + data.spouseIncome)} € / mois`,
           30,
           y,
         );
@@ -389,7 +386,7 @@ export const pdfGenerator = {
         }
         y = textMuted(`Type de garde : ${custodyLabel}`, 30, y);
         y = textMuted(
-          `Revenu du bénéficiaire : ${beneficiaryIncome.toLocaleString()} € / mois`,
+          `Revenu du bénéficiaire : ${fmtNum(beneficiaryIncome)} € / mois`,
           30,
           y,
         );
@@ -400,17 +397,17 @@ export const pdfGenerator = {
         y = checkPageBreak(y, 20);
         y = textBold("Méthode Calcul PC", 25, y, 9);
         y = textMuted(
-          `Capital : ${results.details.axelDepondt.value.toLocaleString()} € (±10%)`,
+          `Capital : ${fmtNum(results.details.axelDepondt.value)} €`,
           30,
           y,
         );
         y = textMuted(
-          `Mensuel sur 8 ans : ${results.details.axelDepondt.monthlyOver8Years.toLocaleString()} € / mois`,
+          `Mensuel sur 8 ans : ${fmtNum(results.details.axelDepondt.monthlyOver8Years)} € / mois`,
           30,
           y,
         );
         y = textMuted(
-          `Capacité d'épargne max débiteur : ${results.details.axelDepondt.debtorMaxSavingsCapital.toLocaleString()} €`,
+          `Capacité d'épargne max débiteur : ${fmtNum(results.details.axelDepondt.debtorMaxSavingsCapital)} €`,
           30,
           y,
         );
@@ -481,14 +478,14 @@ export const pdfGenerator = {
         doc.rect(startX, y, 4, 4, "F");
         doc.setTextColor(COLOR_MUTED);
         doc.text(
-          `Créancier (${data.myIncome.toLocaleString()} €)`,
+          `Créancier (${fmtNum(data.myIncome)} €)`,
           startX + 6,
           y + 3,
         );
         doc.setFillColor(148, 163, 184);
         doc.rect(startX + 80, y, 4, 4, "F");
         doc.text(
-          `Débiteur (${data.spouseIncome.toLocaleString()} €)`,
+          `Débiteur (${fmtNum(data.spouseIncome)} €)`,
           startX + 86,
           y + 3,
         );
@@ -509,57 +506,27 @@ export const pdfGenerator = {
         if (showPilote) {
           pcItems.push(
             {
-              label: "Tiers Min",
-              value: results.details.pilote.min,
-              color: [20, 184, 166],
-            },
-            {
               label: "Tiers",
               value: results.details.pilote.value,
               color: [13, 148, 136],
-            },
-            {
-              label: "Tiers Max",
-              value: results.details.pilote.max,
-              color: [15, 118, 110],
             },
           );
         }
         if (showInsee) {
           pcItems.push(
             {
-              label: "INSEE Min",
-              value: results.details.insee.min,
-              color: [99, 102, 241],
-            },
-            {
               label: "INSEE",
               value: results.details.insee.value,
               color: [79, 70, 229],
-            },
-            {
-              label: "INSEE Max",
-              value: results.details.insee.max,
-              color: [67, 56, 202],
             },
           );
         }
         if (showAxelDepondt) {
           pcItems.push(
             {
-              label: "Cal. PC Min",
-              value: results.details.axelDepondt.min,
-              color: [168, 85, 247],
-            },
-            {
               label: "Cal. PC",
               value: results.details.axelDepondt.value,
               color: [147, 51, 234],
-            },
-            {
-              label: "Cal. PC Max",
-              value: results.details.axelDepondt.max,
-              color: [126, 34, 206],
             },
           );
         }
@@ -582,7 +549,7 @@ export const pdfGenerator = {
           doc.setFontSize(6);
           doc.setTextColor(COLOR_PRIMARY);
           doc.text(
-            `${item.value.toLocaleString()}€`,
+            `${fmtNum(item.value)}€`,
             currentX + pcColW / 2,
             topY - 2,
             { align: "center" },
@@ -615,7 +582,7 @@ export const pdfGenerator = {
           doc.setFont("helvetica", "bold");
           doc.setTextColor(239, 68, 68);
           doc.text(
-            `Moyenne: ${pcMainValue.toLocaleString()} €`,
+            `Moyenne: ${fmtNum(pcMainValue)} €`,
             pageWidth / 2,
             avgLineY - 3,
             { align: "center" },

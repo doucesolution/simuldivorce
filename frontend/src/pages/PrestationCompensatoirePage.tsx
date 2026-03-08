@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar,
@@ -65,8 +65,11 @@ const PrestationCompensatoirePage: React.FC = () => {
 
   const stepIdx = (name: string) => guidedSections.indexOf(name);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    scrollRef.current?.scrollTo(0, 0);
   }, []);
 
   const save = () => {
@@ -178,7 +181,7 @@ const PrestationCompensatoirePage: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex-1 px-4 space-y-8 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
+      <div ref={scrollRef} className="relative z-10 flex-1 px-4 space-y-8 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
         {/* ── Section 1: Mariage ── */}
         <GuidedStep
           step={stepIdx("mariage")}

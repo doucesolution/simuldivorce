@@ -63,9 +63,13 @@ export const GuidedStep: React.FC<GuidedStepProps> = ({
     wasCompleteRef.current = isComplete;
   }, [isComplete, isActive, onAdvance]);
 
-  // Scroll into view when step becomes active
+  // Scroll into view only when isActive transitions false → true
+  // (not on initial mount, which would override the page-level ScrollToTop).
+  const prevIsActiveRef = useRef(isActive);
   useEffect(() => {
-    if (isActive && stepRef.current) {
+    const wasActive = prevIsActiveRef.current;
+    prevIsActiveRef.current = isActive;
+    if (isActive && !wasActive && stepRef.current) {
       const timer = setTimeout(() => {
         stepRef.current?.scrollIntoView({
           behavior: "smooth",

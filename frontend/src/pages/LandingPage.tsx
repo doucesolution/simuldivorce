@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import { InfoTooltip } from "../components/InfoTooltip";
@@ -34,6 +34,7 @@ const landingFaq = faqJsonLd([
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const [showAvocatInfo, setShowAvocatInfo] = useState(false);
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col items-center relative overflow-hidden text-center transition-colors duration-300">
@@ -115,6 +116,26 @@ const LandingPage: React.FC = () => {
             juridique. Ne se substitue pas à l'avis d'un avocat ou d'un notaire.
           </p>
         </div>
+
+        {/* Avocat button */}
+        <button
+          onClick={() => setShowAvocatInfo((v) => !v)}
+          className="mt-6 group relative w-full max-w-md mx-auto px-6 py-3 rounded-2xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-amber-500/20 hover:from-amber-500/30 hover:via-amber-400/20 hover:to-amber-500/30 transition-all shadow-lg shadow-amber-500/10 hover:shadow-amber-500/25"
+        >
+          <span className="flex items-center justify-center space-x-2 text-amber-400 font-bold tracking-wide text-base">
+            <span>⚖️</span>
+            <span>Vous êtes avocat(e) ?</span>
+          </span>
+          <span className="block mt-0.5 text-[11px] text-amber-400/70">Accédez à l'espace professionnel</span>
+        </button>
+        {showAvocatInfo && (
+          <div className="max-w-md mx-auto mt-3 px-5 py-4 rounded-2xl border border-amber-400/40 bg-amber-500/10 animate-[fadeIn_0.3s_ease-out]">
+            <p className="text-sm leading-relaxed text-center text-amber-300">
+              🚧 La partie dédiée aux avocats est actuellement en cours de
+              développement. Elle sera disponible prochainement.
+            </p>
+          </div>
+        )}
 
         <Link
           to="/guide"

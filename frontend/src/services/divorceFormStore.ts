@@ -217,9 +217,19 @@ export function buildFinancialPayload(
     return 0;
   })();
 
+  // Derive net income from gross income (revenus avant impôts)
+  const dGross = parseFloat(formData.debtorGrossIncome) || 0;
+  const spouseIncome = (formData.debtorIncomeMode || "monthly") === "annual"
+    ? Math.round(dGross / 12)
+    : dGross;
+  const cGross = parseFloat(formData.creditorGrossIncome) || 0;
+  const myIncome = (formData.creditorIncomeMode || "monthly") === "annual"
+    ? Math.round(cGross / 12)
+    : cGross;
+
   return {
-    myIncome: parseFloat(formData.myIncome) || 0,
-    spouseIncome: parseFloat(formData.spouseIncome) || 0,
+    myIncome,
+    spouseIncome,
     marriageDate: formData.marriageDate,
     divorceDate: formData.divorceDate,
     childrenCount: formData.childrenCount || 0,

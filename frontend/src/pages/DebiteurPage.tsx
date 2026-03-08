@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar,
@@ -39,16 +39,10 @@ const DebiteurPage: React.FC = () => {
   const { selectedMethods } = getCalculationChoices();
   const pcMethods = selectedMethods.prestationCompensatoire || [];
   const showAxelDepondtSteps = pcMethods.includes("axelDepondt");
-  const needsNetIncome =
-    pcMethods.includes("pilote") || pcMethods.includes("insee");
 
   // Local state
   const [spouseBirthDate, setSpouseBirthDate] = useState(
     stored.spouseBirthDate,
-  );
-  const [spouseIncome, setSpouseIncome] = useState(stored.spouseIncome);
-  const [noIncomeDebiteur, setNoIncomeDebiteur] = useState(
-    stored.spouseIncome === "0",
   );
 
   const [debtorGrossIncome, setDebtorGrossIncome] = useState(
@@ -82,15 +76,23 @@ const DebiteurPage: React.FC = () => {
   );
 
   const { currentStep, advanceStep, allDone, isGuided } = useGuidedSteps(1);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    scrollRef.current?.scrollTo(0, 0);
   }, []);
 
   const save = () => {
+    // Derive spouseIncome from debtorGrossIncome for pilote/insee methods
+    const grossVal = parseFloat(debtorGrossIncome) || 0;
+    const derivedIncome = debtorIncomeMode === "annual"
+      ? String(Math.round(grossVal / 12))
+      : debtorGrossIncome || "0";
+
     saveFormData({
       spouseBirthDate,
-      spouseIncome,
+      spouseIncome: derivedIncome,
       debtorGrossIncome,
       debtorIncomeMode,
       debtorChildContribution,
@@ -167,14 +169,13 @@ const DebiteurPage: React.FC = () => {
         </p>
         <p className="mt-2 text-xs leading-relaxed text-gray-500">
           Le débiteur est l'époux aux revenus les plus élevés (art. 270 du Code
-          Civil). Le Net Social — obligatoire sur les bulletins de paie depuis
-          2024 — sert de base aux méthodes Tiers Pondéré et INSEE. La méthode
-          Calcul PC utilise les revenus bruts projetés sur 8 ans.
+          Civil). Les revenus avant impôts servent de base à toutes les méthodes
+          de calcul.
         </p>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-28 sm:pb-32 animate-fade-in relative z-10 scrollbar-hide space-y-8">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 sm:px-6 pb-28 sm:pb-32 animate-fade-in relative z-10 scrollbar-hide space-y-8">
         <GuidedStep
           step={0}
           currentStep={currentStep}
@@ -213,46 +214,12 @@ const DebiteurPage: React.FC = () => {
               )}
             </div>
 
-            {/* Net Social */}
-            {needsNetIncome && (
-              <div className="glass-panel p-6 rounded-2xl border border-white/10">
-                <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
-                  <Wallet className="w-3 h-3" />
-                  <span>Net Social (€/mois)</span>
-                  <InfoTooltip content="Le revenu net mensuel du débiteur. Ce montant est comparé à celui du créancier pour déterminer la disparité de niveau de vie." />
-                </label>
-                <CurrencyInput
-                  min="0"
-                  value={spouseIncome}
-                  onValueChange={setSpouseIncome}
-                  placeholder="ex: 3 500"
-                  disabled={noIncomeDebiteur}
-                  className={`w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none ${noIncomeDebiteur ? "opacity-50 cursor-not-allowed" : ""}`}
-                />
-                <label className="flex items-center space-x-2 mt-2 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={noIncomeDebiteur}
-                    onChange={(e) => {
-                      setNoIncomeDebiteur(e.target.checked);
-                      if (e.target.checked) setSpouseIncome("0");
-                    }}
-                    className="w-3.5 h-3.5 rounded border-white/20 bg-transparent accent-[var(--color-plasma-cyan)]"
-                  />
-                  <span className="text-xs text-gray-400">Aucun Revenu</span>
-                </label>
-              </div>
-            )}
-
-            {/* Projections Débiteur (Calcul PC) */}
-            {showAxelDepondtSteps && (
-              <>
-                {/* Revenus actuels avant impôts */}
+            {/* Revenus actuels avant impôts */}
                 <div className="glass-panel p-6 rounded-2xl border border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <TrendingUp className="w-3 h-3" />
                     <span>Revenus actuels avant impôts</span>
-                    <InfoTooltip content="Revenus bruts (avant impôts) du débiteur. Vous pouvez saisir le montant annuel ou mensuel." />
+                    <InfoTooltip content="Revenus bruts (avant impôts) du débiteur. Vous pouvez saisir le montant annuel ou mensuel. Ce montant est utilisé pour toutes les méthodes de calcul." />
                   </label>
                   <div className="flex mb-3 rounded-lg overflow-hidden border border-white/10">
                     <button
@@ -287,6 +254,10 @@ const DebiteurPage: React.FC = () => {
                     </p>
                   )}
                 </div>
+
+            {/* Projections Débiteur (Calcul PC) */}
+            {showAxelDepondtSteps && (
+              <>
 
                 {/* Contribution aux charges des enfants */}
                 <div className="glass-panel p-6 rounded-2xl border border-white/10">

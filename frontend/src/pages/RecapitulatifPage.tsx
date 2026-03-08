@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -121,8 +121,11 @@ const RecapitulatifPage: React.FC = () => {
     hasPC &&
     (choices.selectedMethods.prestationCompensatoire || []).includes("insee");
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    scrollRef.current?.scrollTo(0, 0);
   }, []);
 
   const handleValidate = () => {
@@ -202,7 +205,7 @@ const RecapitulatifPage: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex-1 px-4 space-y-6 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
+      <div ref={scrollRef} className="relative z-10 flex-1 px-4 space-y-6 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
         {/* ════════════════════════════════════════ */}
         {/* PRESTATION COMPENSATOIRE                */}
         {/* ════════════════════════════════════════ */}
@@ -267,7 +270,7 @@ const RecapitulatifPage: React.FC = () => {
               />
             </Section>
 
-            {pcNeedsNetIncome && (
+            {hasPC && (
               <Section
                 icon={<Scale className="w-4 h-4" />}
                 color="text-teal-400"
@@ -275,12 +278,12 @@ const RecapitulatifPage: React.FC = () => {
                 subcategory="Revenus"
               >
                 <Row
-                  label="Net Social Créancier"
-                  value={formatCurrency(formData.myIncome)}
+                  label="Revenus avant impôts — Créancier"
+                  value={`${formatCurrency(formData.creditorGrossIncome)} (${formData.creditorIncomeMode === "annual" ? "annuel" : "mensuel"})`}
                 />
                 <Row
-                  label="Revenu Débiteur"
-                  value={formatCurrency(formData.spouseIncome)}
+                  label="Revenus avant impôts — Débiteur"
+                  value={`${formatCurrency(formData.debtorGrossIncome)} (${formData.debtorIncomeMode === "annual" ? "annuel" : "mensuel"})`}
                 />
               </Section>
             )}

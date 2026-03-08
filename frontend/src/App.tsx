@@ -28,12 +28,19 @@ const InterstitialAdPage = lazy(() => import("./pages/InterstitialAdPage"));
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    // Scroll the window itself
-    window.scrollTo(0, 0);
-    // Also reset any inner scrollable containers (overflow-y-auto divs)
-    document
-      .querySelectorAll<HTMLElement>('[class*="overflow-y"]')
-      .forEach((el) => el.scrollTo(0, 0));
+    const resetScroll = () => {
+      window.scrollTo(0, 0);
+      document
+        .querySelectorAll<HTMLElement>('[class*="overflow-y"]')
+        .forEach((el) => el.scrollTo(0, 0));
+    };
+    resetScroll();
+    // Retry after Suspense-loaded content renders
+    const t1 = requestAnimationFrame(() => {
+      requestAnimationFrame(resetScroll);
+    });
+    const t2 = setTimeout(resetScroll, 120);
+    return () => { cancelAnimationFrame(t1); clearTimeout(t2); };
   }, [pathname]);
   return null;
 };

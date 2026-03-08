@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar,
@@ -39,15 +39,9 @@ const CreancierPage: React.FC = () => {
   const { selectedMethods } = getCalculationChoices();
   const pcMethods = selectedMethods.prestationCompensatoire || [];
   const showAxelDepondtSteps = pcMethods.includes("axelDepondt");
-  const needsNetIncome =
-    pcMethods.includes("pilote") || pcMethods.includes("insee");
 
   // Local state
   const [myBirthDate, setMyBirthDate] = useState(stored.myBirthDate);
-  const [myIncome, setMyIncome] = useState(stored.myIncome);
-  const [noIncomeCreancier, setNoIncomeCreancier] = useState(
-    stored.myIncome === "0",
-  );
 
   const [creditorGrossIncome, setCreditorGrossIncome] = useState(
     stored.creditorGrossIncome,
@@ -84,15 +78,23 @@ const CreancierPage: React.FC = () => {
     useState(stored.creditorExpectsRevenueChange || "no");
 
   const { currentStep, advanceStep, allDone, isGuided } = useGuidedSteps(1);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    scrollRef.current?.scrollTo(0, 0);
   }, []);
 
   const save = () => {
+    // Derive myIncome from creditorGrossIncome for pilote/insee methods
+    const grossVal = parseFloat(creditorGrossIncome) || 0;
+    const derivedIncome = creditorIncomeMode === "annual"
+      ? String(Math.round(grossVal / 12))
+      : creditorGrossIncome || "0";
+
     saveFormData({
       myBirthDate,
-      myIncome,
+      myIncome: derivedIncome,
       creditorGrossIncome,
       creditorIncomeMode,
       creditorChildContribution,
@@ -108,12 +110,6 @@ const CreancierPage: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (needsNetIncome) {
-      const myIncVal = parseFloat(myIncome) || 0;
-      if (myIncVal <= 0 && !noIncomeCreancier) {
-        // Simple fallback — just proceed (validation is soft)
-      }
-    }
     save();
     navigate(getNextPage(currentPath));
   };
@@ -185,7 +181,7 @@ const CreancierPage: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex-1 px-4 space-y-8 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
+      <div ref={scrollRef} className="relative z-10 flex-1 px-4 space-y-8 overflow-y-auto sm:px-6 pb-28 sm:pb-32 animate-fade-in scrollbar-hide">
         <GuidedStep
           step={0}
           currentStep={currentStep}
@@ -224,46 +220,12 @@ const CreancierPage: React.FC = () => {
               )}
             </div>
 
-            {/* Net Social */}
-            {needsNetIncome && (
-              <div className="p-6 border glass-panel rounded-2xl border-white/10">
-                <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
-                  <Wallet className="w-3 h-3" />
-                  <span>Net Social (€/mois)</span>
-                  <InfoTooltip content="Le revenu net mensuel du créancier. Ce montant est comparé à celui du débiteur pour déterminer la disparité de niveau de vie." />
-                </label>
-                <CurrencyInput
-                  min="0"
-                  value={myIncome}
-                  onValueChange={setMyIncome}
-                  placeholder="ex: 2 500"
-                  disabled={noIncomeCreancier}
-                  className={`w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl p-4 text-[var(--text-primary)] focus:border-[var(--color-plasma-cyan)] outline-none ${noIncomeCreancier ? "opacity-50 cursor-not-allowed" : ""}`}
-                />
-                <label className="flex items-center mt-2 space-x-2 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={noIncomeCreancier}
-                    onChange={(e) => {
-                      setNoIncomeCreancier(e.target.checked);
-                      if (e.target.checked) setMyIncome("0");
-                    }}
-                    className="w-3.5 h-3.5 rounded border-white/20 bg-transparent accent-[var(--color-plasma-cyan)]"
-                  />
-                  <span className="text-xs text-gray-400">Aucun Revenu</span>
-                </label>
-              </div>
-            )}
-
-            {/* Projections Créancier (Calcul PC) */}
-            {showAxelDepondtSteps && (
-              <>
-                {/* Revenus actuels avant impôts */}
+            {/* Revenus actuels avant impôts */}
                 <div className="p-6 border glass-panel rounded-2xl border-white/10">
                   <label className="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                     <TrendingUp className="w-3 h-3" />
                     <span>Revenus actuels avant impôts</span>
-                    <InfoTooltip content="Revenus bruts (avant impôts) du créancier. Vous pouvez saisir le montant annuel ou mensuel." />
+                    <InfoTooltip content="Revenus bruts (avant impôts) du créancier. Vous pouvez saisir le montant annuel ou mensuel. Ce montant est utilisé pour toutes les méthodes de calcul." />
                   </label>
                   <div className="flex mb-3 overflow-hidden border rounded-lg border-white/10">
                     <button
@@ -300,6 +262,10 @@ const CreancierPage: React.FC = () => {
                     </p>
                   )}
                 </div>
+
+            {/* Projections Créancier (Calcul PC) */}
+            {showAxelDepondtSteps && (
+              <>
 
                 {/* Contribution aux charges des enfants */}
                 <div className="p-6 border glass-panel rounded-2xl border-white/10">
