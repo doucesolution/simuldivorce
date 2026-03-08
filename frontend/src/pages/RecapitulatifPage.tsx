@@ -109,14 +109,6 @@ const RecapitulatifPage: React.FC = () => {
     (choices.selectedMethods.prestationCompensatoire || []).includes(
       "axelDepondt",
     );
-  const pcNeedsNetIncome =
-    hasPC &&
-    ((choices.selectedMethods.prestationCompensatoire || []).includes(
-      "pilote",
-    ) ||
-      (choices.selectedMethods.prestationCompensatoire || []).includes(
-        "insee",
-      ));
   const pcNeedsFamilyData =
     hasPC &&
     (choices.selectedMethods.prestationCompensatoire || []).includes("insee");
