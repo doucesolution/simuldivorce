@@ -214,25 +214,23 @@ const LandingPage: React.FC = () => {
         </nav>
       </div>
 
-      <section className="relative w-[1920px] h-[1000px] overflow-hidden">
+      <section className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9' }}>
         <img
             src="/image-accueil1.jpg"
             alt="Balance de la justice"
-            className="absolute w-full h-full overflow-hidden"
+            className="absolute w-full h-full object-cover"
         />
 
         <div className="absolute inset-0 bg-black/50" />
 
-
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
           <h2 className="text-4xl font-bold">Estimez vos prestations</h2>
-          <p>Vous vous apprêtez à divorcer mais vous souhaitez estimer le montant de vos prestations compensatoires ? < br/>
-          Vous êtes à la recherche d'un outil de simulation simple et pratique de vos prestations qui se base sur votre situation ? <br/>
-          SimulDivorce vous permet d'estimer vos prestations à partir de votre situation à travers une simulation.
+          <p>
+            Vous vous apprêtez à divorcer mais vous souhaitez estimer le montant de vos prestations compensatoires ? <br/>
+            Vous êtes à la recherche d'un outil de simulation simple et pratique de vos prestations qui se base sur votre situation ? <br/>
+            SimulDivorce vous permet d'estimer vos prestations à partir de votre situation à travers une simulation.
           </p>
         </div>
-
-
       </section>
 
       {/* Section Nos Services */}
