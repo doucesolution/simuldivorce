@@ -2,9 +2,7 @@
 
 @font-face {
   font-family: "FS Rosa";
-  src:
-    url("./assets/FS-Rosa-Regular.woff2") format("woff2"),
-    url("./assets/FS-Rosa-Regular.ttf") format("truetype");
+  src: url("./assets/FS-Rosa-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -730,3 +728,4 @@ body {
 .animate-implode {
   animation: implode 1.5s ease-in both;
 }
+
