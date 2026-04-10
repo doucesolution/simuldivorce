@@ -729,3 +729,11 @@ body {
   animation: implode 1.5s ease-in both;
 }
 
+/* Immuniser les sections hero avec image de fond */
+.hero-image-section,
+.hero-image-section * {
+  color-scheme: normal;
+}
+.hero-image-section .hero-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
